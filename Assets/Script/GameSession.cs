@@ -6,5 +6,8 @@ namespace PPYY
     {
         public static int Stage1ScoreP1;
         public static int Stage1ScoreP2;
+
+        public static int Stage2ScoreP1;
+        public static int Stage2ScoreP2;
     }
 }
