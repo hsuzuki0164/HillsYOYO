@@ -15,6 +15,8 @@ namespace PPYY.Stage3
         public GameObject[] hitEffectPrefabs;
         public float punchScale = 0.3f;
         public float punchDuration = 0.15f;
+        public AudioClip[] hitSounds;
+        [Range(0f, 1f)] public float hitSoundVolume = 1f;
 
         SpriteRenderer sr;
 
@@ -39,6 +41,10 @@ namespace PPYY.Stage3
             {
                 var effect = hitEffectPrefabs[Random.Range(0, hitEffectPrefabs.Length)];
                 if (effect != null) Instantiate(effect, transform.position, Quaternion.identity);
+            }
+            if (hitSounds != null && hitSounds.Length > 0)
+            {
+                SfxPlayer.Play(hitSounds[Random.Range(0, hitSounds.Length)], hitSoundVolume);
             }
 
             controller?.OnCoreHit(worldPos);

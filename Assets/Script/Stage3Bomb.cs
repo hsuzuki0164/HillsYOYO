@@ -14,6 +14,9 @@ namespace PPYY.Stage3
         public int maxStealOnExplode = 80;
         public GameObject explodeEffectPrefab;
         public GameObject defuseEffectPrefab;
+        public AudioClip explodeSound;
+        public AudioClip defuseSound;
+        [Range(0f, 1f)] public float soundVolume = 1f;
 
         Collider2D col;
         bool resolved;
@@ -62,6 +65,7 @@ namespace PPYY.Stage3
             }
 
             if (explodeEffectPrefab != null) Instantiate(explodeEffectPrefab, transform.position, Quaternion.identity);
+            SfxPlayer.Play(explodeSound, soundVolume);
             Destroy(gameObject);
         }
 
@@ -73,6 +77,7 @@ namespace PPYY.Stage3
             StopAllCoroutines();
 
             if (defuseEffectPrefab != null) Instantiate(defuseEffectPrefab, transform.position, Quaternion.identity);
+            SfxPlayer.Play(defuseSound, soundVolume);
             Destroy(gameObject);
         }
     }

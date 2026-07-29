@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 using PPYY.Stage1; // PlayerSide を流用
 
 namespace PPYY.Stage3
@@ -21,8 +21,8 @@ namespace PPYY.Stage3
         public Sprite[] treasureSprites = new Sprite[10];
 
         [Header("お宝ポイントのUIテキスト（任意）")]
-        public Text p1PointsText;
-        public Text p2PointsText;
+        public TextMeshProUGUI p1PointsText;
+        public TextMeshProUGUI p2PointsText;
 
         [Header("デバッグ用（ONにするとステージ2の引き継ぎ値を無視し、この値から開始する）")]
         public bool useDebugStartPoints = false;

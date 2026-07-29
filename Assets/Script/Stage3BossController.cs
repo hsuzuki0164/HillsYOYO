@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using PPYY.Stage1; // PlayerSide を流用
@@ -13,12 +14,14 @@ namespace PPYY.Stage3
 
         [Header("ライフ")]
         public int maxHp = 3000;
-        public Text hpText; // 任意
+        public TextMeshProUGUI hpText; // 任意
+        [Tooltip("体力ゲージ（任意）。ImageのImage Type=Filled, Fill Method=Horizontal, Fill Origin=Left に設定しておくと、左基準で右側から減っていくバーになる")]
+        public Image hpBarImage;
 
         [Header("弱点（目・手）合計ヒットでコア露出")]
         public int weakPointHitsToExpose = 10;
         [Tooltip("弱点ヒット数の進捗表示（任意、例：3/10）")]
-        public Text weakPointCounterText;
+        public TextMeshProUGUI weakPointCounterText;
 
         [Header("コア露出")]
         public float coreExposureDuration = 5f;
@@ -33,10 +36,20 @@ namespace PPYY.Stage3
         [Tooltip("方式B：口が開いてコアが出ているときの見た目")]
         public Sprite mouthOpenSprite;
         public Stage3BossCore core;
+        [Header("口の開閉の効果音")]
+        public AudioClip mouthOpenSound;
+        public AudioClip mouthCloseSound;
+        [Range(0f, 1f)] public float mouthSoundVolume = 1f;
 
         [Header("コア攻撃1回あたりのダメージ")]
         public int coreDamageMin = 50;
         public int coreDamageMax = 300;
+
+        [Header("コアを攻撃された時の目の見た目（任意）")]
+        public SpriteRenderer[] eyeRenderers;
+        public Sprite eyeHurtSprite;
+        [Tooltip("この秒数後に元の目の見た目へ戻す")]
+        public float eyeHurtDuration = 0.3f;
 
         [Header("雑魚敵召喚")]
         public GameObject[] minionPrefabs;
@@ -64,6 +77,9 @@ namespace PPYY.Stage3
         public Sprite lootSprite;
         [Tooltip("この秒数以内に手をヒットするとお宝を取り返せる。経過すると消滅（盗まれたまま）")]
         public float lootReturnWindow = 3f;
+        [Tooltip("お宝を強奪した瞬間の効果音")]
+        public AudioClip stealSound;
+        [Range(0f, 1f)] public float stealSoundVolume = 1f;
 
         [Header("本体の中央位置（左右移動の復帰先）")]
         public float centerX = 0f;
@@ -79,9 +95,18 @@ namespace PPYY.Stage3
         public float handBobAmplitude = 0.3f;
         public float handBobFrequency = 1.2f;
 
+        [Header("本体：常時ランダムに左右へ素早く移動")]
+        public float sideMoveIntervalMin = 1f;
+        public float sideMoveIntervalMax = 3f;
+        [Tooltip("中央からどれだけ左右に動くか")]
+        public float sideMoveRangeX = 2f;
+        [Tooltip("移動にかける時間（短いほど素早く動く）")]
+        public float sideMoveDuration = 0.25f;
+        public Ease sideMoveEase = Ease.OutQuad;
+
         [Header("ステージ制限時間")]
         public float timeLimit = 90f;
-        public Text timerText;
+        public TextMeshProUGUI timerText;
         [Tooltip("撃破/逃走後に遷移するシーン名。空なら遷移しない")]
         public string nextSceneName = "";
 
@@ -94,6 +119,11 @@ namespace PPYY.Stage3
         public float explosionSpawnInterval = 0.3f;
         public Vector2 explosionAreaMin = new Vector2(-6f, -3f);
         public Vector2 explosionAreaMax = new Vector2(6f, 3f);
+        [Tooltip("爆発が発生するたびに鳴らす効果音（複数登録するとランダム再生）")]
+        public AudioClip[] explosionSounds;
+        [Range(0f, 1f)] public float explosionSoundVolume = 1f;
+        [Tooltip("爆発が終わってから、断末魔・消滅アニメーションを始めるまでの間の秒数")]
+        public float delayAfterExplosion = 0.5f;
 
         [Header("撃破演出：爆発後、スカッシュ&ストレッチしながら上へ消える")]
         public float squashStretchScaleX = 12f;
@@ -101,6 +131,11 @@ namespace PPYY.Stage3
         public float squashStretchDuration = 0.3f;
         public float pullUpDistance = 10f;
         public float pullUpDuration = 0.5f;
+        [Tooltip("伸びて消える瞬間に鳴らす断末魔の声")]
+        public AudioClip deathCrySound;
+        [Range(0f, 1f)] public float deathCrySoundVolume = 1f;
+        [Tooltip("撃破した瞬間に停止するBGM（StageCountdownが再生しているものと同じAudioSourceを指定）")]
+        public AudioSource bgm;
 
         [Header("撃破演出：消滅後の画面フラッシュ＋お宝の雨")]
         [Tooltip("画面全体を覆う白いUI Image（任意）")]
@@ -108,6 +143,16 @@ namespace PPYY.Stage3
         public float flashFadeInDuration = 0.2f;
         public float flashFadeOutDuration = 1.5f;
         public Stage3TreasureRain treasureRain; // 任意
+
+        [Header("お宝の雨が始まってから指定秒後に鳴らす別BGM")]
+        public AudioSource victoryBgmSource;
+        public AudioClip victoryBgmClip;
+        public float victoryBgmDelay = 3f;
+
+        [Header("「ボス撃破」画像（お宝の雨と同時に表示。UI Image / SpriteRenderer どちらでも可）")]
+        public GameObject bossDefeatedImage;
+        public float bossDefeatedImageDuration = 0.5f;
+        public Ease bossDefeatedImageEase = Ease.OutBack;
 
         [Header("撃破演出：背景を明るくする（任意）")]
         [Tooltip("暗くしている背景のSpriteRenderer。複数レイヤーある場合は全て登録")]
@@ -125,6 +170,9 @@ namespace PPYY.Stage3
         Vector3 leftHandBasePos, rightHandBasePos;
         bool leftHandBobPaused, rightHandBobPaused;
         float idleTime;
+        bool sideMovePaused;
+        Sprite[] eyeOriginalSprites;
+        Coroutine eyeHurtRoutine;
 
         void Start()
         {
@@ -136,14 +184,45 @@ namespace PPYY.Stage3
             if (leftHand != null) leftHandBasePos = leftHand.localPosition;
             if (rightHand != null) rightHandBasePos = rightHand.localPosition;
 
+            if (eyeRenderers != null)
+            {
+                eyeOriginalSprites = new Sprite[eyeRenderers.Length];
+                for (int i = 0; i < eyeRenderers.Length; i++)
+                {
+                    if (eyeRenderers[i] != null) eyeOriginalSprites[i] = eyeRenderers[i].sprite;
+                }
+            }
+
             ResetMinionTimer();
             ResetBombTimer();
             ResetStealTimer();
-            SetMouthOpen(false);
+            ApplyMouthVisual(false); // 初期化時は音を鳴らさない
 
             UpdateHpText();
             UpdateTimerText();
             UpdateWeakPointCounterText();
+
+            StartCoroutine(SideMoveLoop());
+        }
+
+        // ランダムな間隔で左右へ素早く移動する。強奪アニメーション中(sideMovePaused)は動かない
+        IEnumerator SideMoveLoop()
+        {
+            while (state != BossState.Defeated && state != BossState.Fleeing)
+            {
+                float wait = Random.Range(sideMoveIntervalMin, sideMoveIntervalMax);
+                yield return new WaitForSeconds(wait);
+
+                if (state == BossState.Defeated || state == BossState.Fleeing) yield break;
+                if (sideMovePaused) continue;
+
+                float targetX = Mathf.Clamp(
+                    centerX + Random.Range(-sideMoveRangeX, sideMoveRangeX),
+                    -bodyMoveRangeX, bodyMoveRangeX);
+
+                transform.DOKill();
+                transform.DOMoveX(targetX, sideMoveDuration).SetEase(sideMoveEase);
+            }
         }
 
         void Update()
@@ -253,6 +332,8 @@ namespace PPYY.Stage3
 
             float clampedX = Mathf.Clamp(pileTarget.x, -bodyMoveRangeX, bodyMoveRangeX);
 
+            sideMovePaused = true; // 常時のランダム左右移動と衝突しないよう一時停止
+
             // 本体がその方向へ寄る（X方向のみ。Y方向は常時の浮遊アニメーションに任せる）
             transform.DOKill();
             transform.DOMoveX(clampedX, bodyMoveDuration).SetEase(Ease.InOutQuad);
@@ -269,6 +350,7 @@ namespace PPYY.Stage3
 
                 int amount = Random.Range(stealAmountMin, stealAmountMax + 1);
                 Stage3TreasureManager.Instance.StealPoints(side, amount);
+                SfxPlayer.Play(stealSound, stealSoundVolume);
 
                 var handWeakPoint = hand.GetComponent<Stage3BossWeakPoint>();
                 if (handWeakPoint != null) handWeakPoint.ReceiveLoot(amount, side, lootSprite, lootReturnWindow);
@@ -283,6 +365,9 @@ namespace PPYY.Stage3
             // 本体は中央へ戻る
             transform.DOKill();
             transform.DOMoveX(centerX, bodyMoveDuration).SetEase(Ease.InOutQuad);
+            yield return new WaitForSeconds(bodyMoveDuration);
+
+            sideMovePaused = false;
         }
 
         void SetHandBobPaused(PlayerSide side, bool paused)
@@ -342,6 +427,12 @@ namespace PPYY.Stage3
 
         void SetMouthOpen(bool open)
         {
+            SfxPlayer.Play(open ? mouthOpenSound : mouthCloseSound, mouthSoundVolume);
+            ApplyMouthVisual(open);
+        }
+
+        void ApplyMouthVisual(bool open)
+        {
             // 方式A：別オブジェクトの表示切り替え
             if (mouthClosedVisual != null) mouthClosedVisual.SetActive(!open);
             if (mouthOpenVisual != null) mouthOpenVisual.SetActive(open);
@@ -367,6 +458,7 @@ namespace PPYY.Stage3
             int damage = Random.Range(coreDamageMin, coreDamageMax + 1);
             currentHp = Mathf.Max(0, currentHp - damage);
             UpdateHpText();
+            ShowEyeHurtReaction();
 
             if (currentHp <= 0)
             {
@@ -374,11 +466,42 @@ namespace PPYY.Stage3
             }
         }
 
+        // コアを攻撃された瞬間、目を痛がる見た目に切り替え、しばらくしたら元に戻す
+        void ShowEyeHurtReaction()
+        {
+            if (eyeRenderers == null || eyeHurtSprite == null) return;
+
+            foreach (var r in eyeRenderers)
+            {
+                if (r != null) r.sprite = eyeHurtSprite;
+            }
+
+            if (eyeHurtRoutine != null) StopCoroutine(eyeHurtRoutine);
+            eyeHurtRoutine = StartCoroutine(RevertEyesAfterDelay());
+        }
+
+        IEnumerator RevertEyesAfterDelay()
+        {
+            yield return new WaitForSeconds(eyeHurtDuration);
+
+            for (int i = 0; i < eyeRenderers.Length; i++)
+            {
+                if (eyeRenderers[i] != null && eyeOriginalSprites != null && i < eyeOriginalSprites.Length)
+                {
+                    eyeRenderers[i].sprite = eyeOriginalSprites[i];
+                }
+            }
+        }
+
         void Defeat()
         {
             state = BossState.Defeated;
             StopAllCoroutines();
-            SetMouthOpen(false);
+            ApplyMouthVisual(true); // 倒れた後は口を開けたままにする（音は鳴らさない）
+
+            if (bgm != null) bgm.Stop();
+
+            ClearLingeringObjects();
 
             int bonus = Mathf.RoundToInt(maxVictoryBonus * Mathf.Clamp01(stageRemaining / timeLimit));
             if (Stage3TreasureManager.Instance != null)
@@ -390,9 +513,18 @@ namespace PPYY.Stage3
             StartCoroutine(DefeatSequence());
         }
 
+        // 変身演出の永続パーティクル（DestroyOnBossDefeatが付いたもの）と、
+        // 残っている雑魚キャラクターをまとめて削除する
+        void ClearLingeringObjects()
+        {
+            foreach (var d in FindObjectsOfType<DestroyOnBossDefeat>()) Destroy(d.gameObject);
+            foreach (var m in FindObjectsOfType<Stage3Minion>()) Destroy(m.gameObject);
+        }
+
         IEnumerator DefeatSequence()
         {
             yield return StartCoroutine(PlayExplosionBurst());
+            yield return new WaitForSeconds(delayAfterExplosion);
             PlayDisappearAnimation();
         }
 
@@ -417,11 +549,18 @@ namespace PPYY.Stage3
                 Random.Range(explosionAreaMin.y, explosionAreaMax.y),
                 0f);
             Instantiate(explosionEffectPrefab, pos, Quaternion.identity);
+
+            if (explosionSounds != null && explosionSounds.Length > 0)
+            {
+                SfxPlayer.Play(explosionSounds[Random.Range(0, explosionSounds.Length)], explosionSoundVolume);
+            }
         }
 
         // 横に大きく伸びて潰れる（スカッシュ&ストレッチ）→ そのまま上に引っ張られて消える
         void PlayDisappearAnimation()
         {
+            SfxPlayer.Play(deathCrySound, deathCrySoundVolume);
+
             transform.DOKill();
             Sequence seq = DOTween.Sequence();
             seq.Append(transform.DOScale(new Vector3(squashStretchScaleX, squashStretchScaleY, 1f), squashStretchDuration).SetEase(Ease.OutQuad));
@@ -435,13 +574,75 @@ namespace PPYY.Stage3
         {
             PlayScreenFlash();
             BrightenBackground();
-            if (treasureRain != null) treasureRain.Play();
+            if (treasureRain != null)
+            {
+                treasureRain.Play();
+                StartCoroutine(PlayVictoryBgmAfterDelay());
+                ShowBossDefeatedImage();
+            }
 
             float rainDuration = treasureRain != null ? treasureRain.spawnDuration + 1f : 0f;
             float flashDuration = flashFadeInDuration + flashFadeOutDuration;
             float delay = Mathf.Max(rainDuration, flashDuration, backgroundBrightenDuration);
 
             StartCoroutine(DelayedGoToNextScene(delay));
+        }
+
+        // お宝の雨が始まってから victoryBgmDelay 秒後に別のBGMを鳴らす
+        IEnumerator PlayVictoryBgmAfterDelay()
+        {
+            yield return new WaitForSeconds(victoryBgmDelay);
+
+            if (victoryBgmSource != null && victoryBgmClip != null)
+            {
+                victoryBgmSource.clip = victoryBgmClip;
+                victoryBgmSource.Play();
+            }
+        }
+
+        // 「ボス撃破」画像を拡大＋フェードで表示する。UI Image(RectTransform)/SpriteRendererどちらにも対応
+        void ShowBossDefeatedImage()
+        {
+            if (bossDefeatedImage == null) return;
+
+            bossDefeatedImage.SetActive(true);
+
+            var rect = bossDefeatedImage.GetComponent<RectTransform>();
+            Transform t = bossDefeatedImage.transform;
+            t.DOKill();
+
+            if (rect != null)
+            {
+                rect.localScale = Vector3.zero;
+                rect.DOScale(1f, bossDefeatedImageDuration).SetEase(bossDefeatedImageEase);
+            }
+            else
+            {
+                t.localScale = Vector3.zero;
+                t.DOScale(1f, bossDefeatedImageDuration).SetEase(bossDefeatedImageEase);
+            }
+
+            var graphic = bossDefeatedImage.GetComponent<Graphic>();
+            if (graphic != null)
+            {
+                graphic.DOKill();
+                Color c = graphic.color;
+                c.a = 0f;
+                graphic.color = c;
+                graphic.DOFade(1f, bossDefeatedImageDuration).SetEase(bossDefeatedImageEase);
+            }
+            else
+            {
+                var sr = bossDefeatedImage.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    sr.DOKill();
+                    Color c = sr.color;
+                    c.a = 0f;
+                    sr.color = c;
+                    sr.DOFade(1f, bossDefeatedImageDuration).SetEase(bossDefeatedImageEase);
+                }
+            }
         }
 
         void BrightenBackground()
@@ -500,6 +701,7 @@ namespace PPYY.Stage3
         void UpdateHpText()
         {
             if (hpText) hpText.text = currentHp + " / " + maxHp;
+            if (hpBarImage) hpBarImage.fillAmount = maxHp > 0 ? (float)currentHp / maxHp : 0f;
         }
 
         void UpdateTimerText()

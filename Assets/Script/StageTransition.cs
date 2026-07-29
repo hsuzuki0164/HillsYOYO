@@ -21,7 +21,7 @@ namespace PPYY
         [Tooltip("開始時（画面の外・上）のY座標（anchoredPosition.y）。Canvasの高さ等に合わせて調整する")]
         public float doorStartY = 1200f;
         public float doorFallDuration = 0.6f;
-        public Ease doorFallEase = Ease.InQuad;
+        public Ease doorFallEase = Ease.OutElastic;
 
         [Header("扉が落ちる効果音")]
         public AudioSource doorAudioSource;

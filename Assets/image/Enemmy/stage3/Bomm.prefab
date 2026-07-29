@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7628974877067352662}
   - component: {fileID: 6525656749638185859}
   - component: {fileID: 2594232660213435155}
+  - component: {fileID: 7990436627153506033}
   m_Layer: 0
   m_Name: Bomm
   m_TagString: Untagged
@@ -149,3 +150,18 @@ MonoBehaviour:
   maxStealOnExplode: 80
   explodeEffectPrefab: {fileID: 2433282508537954060, guid: 3ef3ae421f71c5c4e97fe12dc2fc6312, type: 3}
   defuseEffectPrefab: {fileID: 2427786012956944610, guid: da0de216ad60c5d46a6b049d61961615, type: 3}
+  explodeSound: {fileID: 8300000, guid: e917ca69a61893b4681a8cca4ed2fba8, type: 3}
+  defuseSound: {fileID: 8300000, guid: 7cb0889451337dc43b6533ae0d7a0f98, type: 3}
+  soundVolume: 1
+--- !u!114 &7990436627153506033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6867222749975404678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e628f19a9433a4b47971ee9d5660c952, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

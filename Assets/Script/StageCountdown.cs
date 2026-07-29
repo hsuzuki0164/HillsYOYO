@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 using DG.Tweening;
 
 namespace PPYY
@@ -12,7 +12,7 @@ namespace PPYY
     public class StageCountdown : MonoBehaviour
     {
         [Header("カウントダウン表示")]
-        public Text countdownText;
+        public TextMeshProUGUI countdownText;
         public string[] countdownLabels = { "3", "2", "1", "スタート" };
 
         [Tooltip("countdownLabelsと同じ並び。各数字を表示しておく秒数（音声ファイルの間合いに合わせて個別に調整する）")]
@@ -30,7 +30,16 @@ namespace PPYY
         [Header("BGM（カウントダウン終了後に再生）")]
         public AudioSource bgm;
 
+        [Tooltip("ONならシーン開始と同時に自動でカウントダウンを始める。StageJingle等から呼び出す場合はOFFにする")]
+        public bool autoStart = true;
+
         void Start()
+        {
+            if (autoStart) BeginCountdown();
+        }
+
+        // StageJingle など、カウントダウンの前に何か挟みたい場合はこちらを呼び出す
+        public void BeginCountdown()
         {
             Time.timeScale = 0f;
             if (countdownText != null) countdownText.gameObject.SetActive(true);

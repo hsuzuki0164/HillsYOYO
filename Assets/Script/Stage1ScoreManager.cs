@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 namespace PPYY.Stage1
 {
@@ -17,10 +17,10 @@ namespace PPYY.Stage1
         public float screenSplitX = 0f;
 
         [Header("UI（未設定でも動作する）")]
-        public Text p1ScoreText;
-        public Text p2ScoreText;
-        public Text p1KeyText;
-        public Text p2KeyText;
+        public TextMeshProUGUI p1ScoreText;
+        public TextMeshProUGUI p2ScoreText;
+        public TextMeshProUGUI p1KeyText;
+        public TextMeshProUGUI p2KeyText;
 
         int scoreP1, scoreP2;
         int keyP1, keyP2;

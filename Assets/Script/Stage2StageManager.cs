@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 using UnityEngine.SceneManagement;
 using PPYY.Stage1; // PlayerSide を流用
 
@@ -16,7 +16,7 @@ namespace PPYY.Stage2
         public string nextSceneName = "Stage3";
 
         [Header("UI（任意）")]
-        public Text timerText;
+        public TextMeshProUGUI timerText;
 
         float remaining;
         bool finished;

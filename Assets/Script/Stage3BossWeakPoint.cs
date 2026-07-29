@@ -19,10 +19,15 @@ namespace PPYY.Stage3
         public WeakPointRole role;
         public Stage3BossController controller;
 
-        [Header("ヒット時のフィードバック")]
+        [Header("ヒット時のフィードバック（目・手で別々の音を設定できる）")]
         public GameObject[] hitEffectPrefabs;
         public float punchScale = 0.2f;
         public float punchDuration = 0.15f;
+        public AudioClip[] hitSounds;
+        [Range(0f, 1f)] public float hitSoundVolume = 1f;
+
+        [Header("お宝を持った状態でヒットして取り返した時の効果音")]
+        public AudioClip lootRecoverSound;
 
         [Header("常時のゆらぎ（Eyeロールのみ有効。Handはコントローラー側の動きと衝突するため対象外）")]
         public float idleMoveAmplitude = 0.08f;
@@ -113,11 +118,16 @@ namespace PPYY.Stage3
                 var effect = hitEffectPrefabs[Random.Range(0, hitEffectPrefabs.Length)];
                 if (effect != null) Instantiate(effect, transform.position, Quaternion.identity);
             }
+            if (hitSounds != null && hitSounds.Length > 0)
+            {
+                SfxPlayer.Play(hitSounds[Random.Range(0, hitSounds.Length)], hitSoundVolume);
+            }
 
             if (hasLoot)
             {
                 if (lootTimeoutRoutine != null) StopCoroutine(lootTimeoutRoutine);
                 Stage3TreasureManager.Instance?.AddPoints(lootSide, lootAmount);
+                SfxPlayer.Play(lootRecoverSound, hitSoundVolume);
                 ClearLoot();
             }
 
