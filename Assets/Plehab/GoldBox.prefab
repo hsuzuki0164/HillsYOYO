@@ -155,7 +155,7 @@ MonoBehaviour:
   mimicDefeatedSprite: {fileID: 933978817, guid: 5d7e4a4fe4bca094c9af7eb040ee87c7, type: 3}
   scoreBySize: 0a0000003200000064000000
   keyCostBySize: 03000000050000000a000000
-  mimicChance: 0.15
+  mimicChance: 0.1
   mimicKeyCost: 1
   mimicHitsToDefeat: 3
   mimicTimeWindow: 5
@@ -168,3 +168,13 @@ MonoBehaviour:
   returnDuration: 0.25
   flickerCount: 6
   flickerInterval: 0.06
+  openSound: {fileID: 8300000, guid: b64f2a2094316d14d8efd83c6121aaa0, type: 3}
+  mimicRevealSound: {fileID: 8300000, guid: bf5ca6d2b1763664b942812b9af00e7e, type: 3}
+  mimicDefeatSound: {fileID: 8300000, guid: d56a97477937dc54096e470515d1a8fa, type: 3}
+  pointsGetSounds:
+  - {fileID: 8300000, guid: 12ce74f0595029846afbcba6dc7c37c2, type: 3}
+  - {fileID: 8300000, guid: fe99d90e43b78f0439d8a586266df9dd, type: 3}
+  - {fileID: 8300000, guid: 256f88ba9a1ad634c9ea87794709ca2b, type: 3}
+  - {fileID: 8300000, guid: 044051c345e729a488d3cbad2e0138ca, type: 3}
+  - {fileID: 8300000, guid: d9920c38180ee8745be2e734439f4105, type: 3}
+  soundVolume: 1

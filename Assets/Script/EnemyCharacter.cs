@@ -36,6 +36,10 @@ namespace PPYY.Stage1
         [Tooltip("ヒット時にランダムで1つ再生するパーティクルプレハブ（複数登録可）")]
         public GameObject[] hitEffectPrefabs;
 
+        [Header("ヒット時の効果音（複数登録するとランダムで再生）")]
+        public AudioClip[] hitSounds;
+        [Range(0f, 1f)] public float hitSoundVolume = 1f;
+
         [Header("移動範囲")]
         public Vector2 boundsMin = new Vector2(-8f, -4f);
         public Vector2 boundsMax = new Vector2(8f, 4f);
@@ -180,6 +184,13 @@ namespace PPYY.Stage1
             if (effect != null) Instantiate(effect, transform.position, Quaternion.identity);
         }
 
+        void PlayHitSound()
+        {
+            if (hitSounds == null || hitSounds.Length == 0) return;
+            var clip = hitSounds[Random.Range(0, hitSounds.Length)];
+            SfxPlayer.Play(clip, hitSoundVolume);
+        }
+
         public void OnHit(Vector2 worldPos)
         {
             if (defeated) return;
@@ -191,6 +202,7 @@ namespace PPYY.Stage1
             Stage1ScoreManager.Instance.AddKey(side, reward);
 
             SpawnHitEffect();
+            PlayHitSound();
 
             transform.DOKill();
             Sequence seq = DOTween.Sequence();

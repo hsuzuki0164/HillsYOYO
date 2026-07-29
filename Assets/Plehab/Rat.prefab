@@ -157,5 +157,11 @@ MonoBehaviour:
   - {fileID: 8163684771574148739, guid: 6dc4191059d6c3a4a820270672bbf567, type: 3}
   - {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
   - {fileID: 1034935213373066521, guid: d2268aa9963d3d24aa4e9121e4efeafe, type: 3}
+  hitSounds:
+  - {fileID: 8300000, guid: c5d80edeacea58b4ba1cc2cc8fcb2218, type: 3}
+  - {fileID: 8300000, guid: d56a97477937dc54096e470515d1a8fa, type: 3}
+  - {fileID: 8300000, guid: 182abe2e67c25584faf35c120c4bf859, type: 3}
+  - {fileID: 8300000, guid: 5c40c03e18a81344bb35fadb3ab38e91, type: 3}
+  hitSoundVolume: 1
   boundsMin: {x: -8, y: -4}
   boundsMax: {x: 8, y: 4}

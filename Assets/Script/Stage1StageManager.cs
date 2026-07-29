@@ -41,7 +41,14 @@ namespace PPYY.Stage1
                     GameSession.Stage1ScoreP2 = Stage1ScoreManager.Instance.GetScore(PlayerSide.P2);
                 }
 
-                SceneManager.LoadScene(nextSceneName);
+                if (PPYY.StageTransition.Instance != null)
+                {
+                    PPYY.StageTransition.Instance.PlayAndLoadScene(nextSceneName);
+                }
+                else
+                {
+                    SceneManager.LoadScene(nextSceneName);
+                }
                 return;
             }
 

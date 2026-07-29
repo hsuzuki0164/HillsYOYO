@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1731518442961108321}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.77, y: -0.7, z: 0}
+  m_LocalPosition: {x: -1.21, y: 0.39, z: 0}
   m_LocalScale: {x: 2.2529085, y: 2.2529085, z: 2.2529085}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -257,4 +257,17 @@ MonoBehaviour:
   - {fileID: 1812913796, guid: 505335d3a757dc041a45c6a7c5836be8, type: 3}
   dollBagScale: {x: 0.5, y: 0.5, z: 0.5}
   fadeOutDuration: 0.4
-  hitEffectPrefabs: []
+  hitEffectPrefabs:
+  - {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
+  - {fileID: 3308840082544497919, guid: af0ef20d9a41ee7479f76ea5c49918cf, type: 3}
+  - {fileID: 2427786012956944610, guid: da0de216ad60c5d46a6b049d61961615, type: 3}
+  hitSounds:
+  - {fileID: 8300000, guid: ac5fd96b1e3a0c6448ce008b746fba9a, type: 3}
+  - {fileID: 8300000, guid: c6c4e3b76d9507a469ff6001f0c7e135, type: 3}
+  - {fileID: 8300000, guid: e9eba3d7bb97d1e4a9656b0a99f210e9, type: 3}
+  hitSoundVolume: 1
+  stealSounds:
+  - {fileID: 8300000, guid: 12ce74f0595029846afbcba6dc7c37c2, type: 3}
+  - {fileID: 8300000, guid: fe99d90e43b78f0439d8a586266df9dd, type: 3}
+  - {fileID: 8300000, guid: 256f88ba9a1ad634c9ea87794709ca2b, type: 3}
+  stealSoundVolume: 1

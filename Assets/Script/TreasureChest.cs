@@ -56,6 +56,17 @@ namespace PPYY.Stage1
         public int flickerCount = 6;
         public float flickerInterval = 0.06f;
 
+        [Header("効果音")]
+        [Tooltip("通常の宝箱を開けたときの音（この後にポイント獲得音がランダムで鳴る）")]
+        public AudioClip openSound;
+        [Tooltip("ミミックだと判明した瞬間の音")]
+        public AudioClip mimicRevealSound;
+        [Tooltip("ミミックを倒したときの音（この後にポイント獲得音がランダムで鳴る）")]
+        public AudioClip mimicDefeatSound;
+        [Tooltip("ポイント獲得時にランダムで選ばれる音（開封・ミミック撃破どちらでも共通）")]
+        public AudioClip[] pointsGetSounds;
+        [Range(0f, 1f)] public float soundVolume = 1f;
+
         SpriteRenderer sr;
         Collider2D col;
         ChestState state;
@@ -120,7 +131,27 @@ namespace PPYY.Stage1
             sr.sprite = openedSprites[(int)currentSize];
             Stage1ScoreManager.Instance.AddScore(side, scoreBySize[(int)currentSize]);
 
+            StartCoroutine(PlaySoundThenPointsSound(openSound));
             PlayOpenAnimation();
+        }
+
+        // firstSound を鳴らし、その再生時間が終わってからポイント獲得音をランダムで鳴らす
+        // （通常開封・ミミック撃破のどちらからも使う共通処理）
+        IEnumerator PlaySoundThenPointsSound(AudioClip firstSound)
+        {
+            float delay = 0f;
+            if (firstSound != null)
+            {
+                SfxPlayer.Play(firstSound, soundVolume);
+                delay = firstSound.length;
+            }
+
+            if (pointsGetSounds != null && pointsGetSounds.Length > 0)
+            {
+                yield return new WaitForSeconds(delay);
+                var clip = pointsGetSounds[Random.Range(0, pointsGetSounds.Length)];
+                SfxPlayer.Play(clip, soundVolume);
+            }
         }
 
         void HandleMimicHit(PlayerSide side)
@@ -137,6 +168,7 @@ namespace PPYY.Stage1
                 // 1回目のヒットでミミックだと判明する。その場で見た目が変わり、即座にペナルティが入る
                 sr.sprite = mimicRevealedSprite != null ? mimicRevealedSprite : openedSprites[(int)currentSize];
                 Stage1ScoreManager.Instance.AddScore(side, mimicPenalty);
+                SfxPlayer.Play(mimicRevealSound, soundVolume);
             }
 
             mimicHitCount++;
@@ -168,6 +200,7 @@ namespace PPYY.Stage1
             sr.sprite = mimicDefeatedSprite != null ? mimicDefeatedSprite : openedSprites[(int)currentSize];
             Stage1ScoreManager.Instance.AddScore(side, mimicDefeatBonus);
 
+            StartCoroutine(PlaySoundThenPointsSound(mimicDefeatSound));
             PlayOpenAnimation();
         }
 

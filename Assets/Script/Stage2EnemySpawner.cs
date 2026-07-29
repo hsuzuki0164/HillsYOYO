@@ -33,6 +33,10 @@ namespace PPYY.Stage2
         [Tooltip("群れ襲来の警告として表示するUIオブジェクト（任意、SetActiveで表示/非表示）")]
         public GameObject swarmWarningUI;
 
+        [Header("警告音（UI表示と同時に再生し、UIが消えると同時に停止）")]
+        public AudioSource warningAudioSource;
+        public AudioClip warningSound;
+
         float timer;
         int activeCount;
 
@@ -78,7 +82,7 @@ namespace PPYY.Stage2
             }
         }
 
-        // ランダムな間隔で警告UIを出し、少し待ってからまとめて敵を出現させる
+        // ランダムな間隔で警告UI・警告音を出し、少し待ってからまとめて敵を出現させる
         IEnumerator SwarmLoop()
         {
             while (true)
@@ -86,8 +90,11 @@ namespace PPYY.Stage2
                 yield return new WaitForSeconds(Random.Range(swarmIntervalMin, swarmIntervalMax));
 
                 if (swarmWarningUI != null) swarmWarningUI.SetActive(true);
+                PlayWarningSound();
+
                 yield return new WaitForSeconds(swarmWarningDuration);
                 if (swarmWarningUI != null) swarmWarningUI.SetActive(false);
+                if (warningAudioSource != null) warningAudioSource.Stop();
 
                 int swarmSize = Random.Range(swarmSizeMin, swarmSizeMax + 1);
                 for (int i = 0; i < swarmSize; i++)
@@ -95,6 +102,14 @@ namespace PPYY.Stage2
                     SpawnRandomEnemy(); // 上限を超える分は自動的にスキップされる
                 }
             }
+        }
+
+        void PlayWarningSound()
+        {
+            if (warningAudioSource == null || warningSound == null) return;
+            warningAudioSource.clip = warningSound;
+            warningAudioSource.loop = true; // 表示中は鳴らし続けたいのでループ再生にする
+            warningAudioSource.Play();
         }
     }
 }

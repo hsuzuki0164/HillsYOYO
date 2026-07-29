@@ -325,5 +325,11 @@ MonoBehaviour:
   - {fileID: 3308840082544497919, guid: af0ef20d9a41ee7479f76ea5c49918cf, type: 3}
   - {fileID: 6131278079450256903, guid: dd1b345f20b13e24b9f184d4917ad726, type: 3}
   - {fileID: 8748687995501502678, guid: 62334a566bbfe3945bc7bd0c02ca1c9e, type: 3}
+  hitSounds:
+  - {fileID: 8300000, guid: ac5fd96b1e3a0c6448ce008b746fba9a, type: 3}
+  - {fileID: 8300000, guid: c6c4e3b76d9507a469ff6001f0c7e135, type: 3}
+  - {fileID: 8300000, guid: e9eba3d7bb97d1e4a9656b0a99f210e9, type: 3}
+  - {fileID: 8300000, guid: 7cb0889451337dc43b6533ae0d7a0f98, type: 3}
+  hitSoundVolume: 1
   boundsMin: {x: -8, y: -4}
   boundsMax: {x: 8, y: 4}

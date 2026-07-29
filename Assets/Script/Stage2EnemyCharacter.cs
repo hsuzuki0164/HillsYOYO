@@ -55,9 +55,15 @@ namespace PPYY.Stage2
         [Tooltip("ドル袋の表示サイズ（dollBagRenderer の localScale に反映される）")]
         public Vector3 dollBagScale = Vector3.one;
 
-        [Header("ヒット時のフェード消滅・パーティクル")]
+        [Header("ヒット時のフェード消滅・パーティクル・効果音")]
         public float fadeOutDuration = 0.4f;
         public GameObject[] hitEffectPrefabs;
+        public AudioClip[] hitSounds;
+        [Range(0f, 1f)] public float hitSoundVolume = 1f;
+
+        [Header("お宝を盗んだ瞬間の効果音")]
+        public AudioClip[] stealSounds;
+        [Range(0f, 1f)] public float stealSoundVolume = 1f;
 
         // 破棄されたときに呼ばれる。Stage2EnemySpawner が出現数管理に使う
         public event System.Action OnRemoved;
@@ -179,6 +185,15 @@ namespace PPYY.Stage2
                 }
                 dollBagRenderer.gameObject.SetActive(true);
             }
+
+            if (hasLoot) PlayStealSound();
+        }
+
+        void PlayStealSound()
+        {
+            if (stealSounds == null || stealSounds.Length == 0) return;
+            var clip = stealSounds[Random.Range(0, stealSounds.Length)];
+            SfxPlayer.Play(clip, stealSoundVolume);
         }
 
         int PickStealAmount()
@@ -274,6 +289,13 @@ namespace PPYY.Stage2
             if (effect != null) Instantiate(effect, transform.position, Quaternion.identity);
         }
 
+        void PlayHitSound()
+        {
+            if (hitSounds == null || hitSounds.Length == 0) return;
+            var clip = hitSounds[Random.Range(0, hitSounds.Length)];
+            SfxPlayer.Play(clip, hitSoundVolume);
+        }
+
         public void OnHit(Vector2 worldPos)
         {
             if (defeated) return;
@@ -289,6 +311,7 @@ namespace PPYY.Stage2
             }
 
             SpawnHitEffect();
+            PlayHitSound();
 
             transform.DOKill();
             Sequence seq = DOTween.Sequence();

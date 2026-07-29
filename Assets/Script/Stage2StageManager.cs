@@ -44,7 +44,14 @@ namespace PPYY.Stage2
                     GameSession.Stage2ScoreP2 = Stage2TreasureManager.Instance.GetPoints(PlayerSide.P2);
                 }
 
-                SceneManager.LoadScene(nextSceneName);
+                if (PPYY.StageTransition.Instance != null)
+                {
+                    PPYY.StageTransition.Instance.PlayAndLoadScene(nextSceneName);
+                }
+                else
+                {
+                    SceneManager.LoadScene(nextSceneName);
+                }
                 return;
             }
 

@@ -151,7 +151,12 @@ MonoBehaviour:
   baseFacesRight: 0
   wobbleAmplitude: 0.6
   wobbleFrequency: 2
+  ratVerticalMovementFactor: 0.2
   stealRadius: 0.3
+  boundsMin: {x: -8, y: -4}
+  boundsMax: {x: 8, y: 4}
+  wanderDurationRange: {x: 10, y: 15}
+  wanderSpeed: 2.5
   fleeSpeed: 4
   despawnDistance: 12
   stealAmounts: c8000000780000003c0000001e000000
@@ -168,7 +173,20 @@ MonoBehaviour:
   - {fileID: -1379039379, guid: 505335d3a757dc041a45c6a7c5836be8, type: 3}
   dollBagScale: {x: 0.4, y: 0.4, z: 0.4}
   fadeOutDuration: 0.4
-  hitEffectPrefabs: []
+  hitEffectPrefabs:
+  - {fileID: 5904719056005892913, guid: 7a1f5c2344e7b8046b22ca0e8ffce4c1, type: 3}
+  - {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
+  - {fileID: 3308840082544497919, guid: af0ef20d9a41ee7479f76ea5c49918cf, type: 3}
+  hitSounds:
+  - {fileID: 8300000, guid: c6c4e3b76d9507a469ff6001f0c7e135, type: 3}
+  - {fileID: 8300000, guid: e9eba3d7bb97d1e4a9656b0a99f210e9, type: 3}
+  - {fileID: 8300000, guid: 7cb0889451337dc43b6533ae0d7a0f98, type: 3}
+  hitSoundVolume: 1
+  stealSounds:
+  - {fileID: 8300000, guid: 256f88ba9a1ad634c9ea87794709ca2b, type: 3}
+  - {fileID: 8300000, guid: 044051c345e729a488d3cbad2e0138ca, type: 3}
+  - {fileID: 8300000, guid: d9920c38180ee8745be2e734439f4105, type: 3}
+  stealSoundVolume: 1
 --- !u!1 &6183069250557883204
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,7 +213,7 @@ Transform:
   m_GameObject: {fileID: 6183069250557883204}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.6, y: -1.66, z: 0}
+  m_LocalPosition: {x: -0.78, y: -1.54, z: 0}
   m_LocalScale: {x: 2.153984, y: 2.1367521, z: 2.1367521}
   m_ConstrainProportionsScale: 0
   m_Children: []
