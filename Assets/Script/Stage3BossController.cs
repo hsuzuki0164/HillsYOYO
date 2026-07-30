@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -45,11 +46,6 @@ namespace PPYY.Stage3
         public int coreDamageMin = 50;
         public int coreDamageMax = 300;
 
-        [Header("コアを攻撃された時の目の見た目（任意）")]
-        public SpriteRenderer[] eyeRenderers;
-        public Sprite eyeHurtSprite;
-        [Tooltip("この秒数後に元の目の見た目へ戻す")]
-        public float eyeHurtDuration = 0.3f;
 
         [Header("雑魚敵召喚")]
         public GameObject[] minionPrefabs;
@@ -134,8 +130,10 @@ namespace PPYY.Stage3
         [Tooltip("伸びて消える瞬間に鳴らす断末魔の声")]
         public AudioClip deathCrySound;
         [Range(0f, 1f)] public float deathCrySoundVolume = 1f;
-        [Tooltip("撃破した瞬間に停止するBGM（StageCountdownが再生しているものと同じAudioSourceを指定）")]
+        [Tooltip("撃破した瞬間に停止する・逃走時にフェードアウトするBGM（StageCountdownが再生しているものと同じAudioSourceを指定）")]
         public AudioSource bgm;
+        [Tooltip("逃走時、BGMをフェードアウトする時間")]
+        public float bgmFadeOutDuration = 1f;
 
         [Header("撃破演出：消滅後の画面フラッシュ＋お宝の雨")]
         [Tooltip("画面全体を覆う白いUI Image（任意）")]
@@ -144,21 +142,54 @@ namespace PPYY.Stage3
         public float flashFadeOutDuration = 1.5f;
         public Stage3TreasureRain treasureRain; // 任意
 
+        [Header("お宝の雨の演出後、ホワイトアウトしてから次のシーンへ")]
+        [Tooltip("画面全体を覆う白いUI Image（screenFlashImageとは別。任意）")]
+        public Image whiteoutImage;
+        public float whiteoutDuration = 1f;
+
         [Header("お宝の雨が始まってから指定秒後に鳴らす別BGM")]
         public AudioSource victoryBgmSource;
         public AudioClip victoryBgmClip;
         public float victoryBgmDelay = 3f;
 
-        [Header("「ボス撃破」画像（お宝の雨と同時に表示。UI Image / SpriteRenderer どちらでも可）")]
-        public GameObject bossDefeatedImage;
-        public float bossDefeatedImageDuration = 0.5f;
-        public Ease bossDefeatedImageEase = Ease.OutBack;
+        [Header("「ボス撃破」テキスト（お宝の雨と同時に表示）")]
+        public TextMeshProUGUI bossDefeatedText;
+        public float bossDefeatedTextDuration = 0.5f;
+        public Ease bossDefeatedTextEase = Ease.OutBack;
 
         [Header("撃破演出：背景を明るくする（任意）")]
         [Tooltip("暗くしている背景のSpriteRenderer。複数レイヤーある場合は全て登録")]
         public SpriteRenderer[] backgroundRenderers;
         public Color brightBackgroundColor = Color.white;
         public float backgroundBrightenDuration = 1.5f;
+
+        [Header("倒せなかった場合の逃走演出：①逃走音＋本体が分裂して消える")]
+        public AudioClip fleeSound;
+        [Range(0f, 1f)] public float fleeSoundVolume = 1f;
+        [Tooltip("本体が分裂するゴーストのプレハブ（イントロと同じもので良い）")]
+        public GameObject fleeGhostPrefab;
+        public int fleeGhostCount = 12;
+        [Tooltip("ゴーストが散らばる半径")]
+        public float fleeGhostScatterRadius = 4f;
+        public float fleeGhostScatterDuration = 1f;
+        public float fleeGhostFadeOutDuration = 0.5f;
+
+        [Header("倒せなかった場合の逃走演出：②「ボス逃走」テキスト")]
+        public TextMeshProUGUI bossFledText;
+        public float bossFledTextDuration = 0.5f;
+        public Ease bossFledTextEase = Ease.OutBack;
+        [Tooltip("テキスト表示後、次に進むまでの保持時間")]
+        public float bossFledTextHoldDuration = 1f;
+
+        [Header("倒せなかった場合の逃走演出：③悲しい効果音")]
+        public AudioClip sadSound;
+        [Range(0f, 1f)] public float sadSoundVolume = 1f;
+        [Tooltip("sadSoundが未設定の場合の待ち時間")]
+        public float sadSoundFallbackHold = 1.5f;
+
+        [Header("倒せなかった場合の逃走演出：④ブラックアウトしてから次のステージへ")]
+        public Image fleeBlackoutImage;
+        public float fleeBlackoutDuration = 1f;
 
         BossState state = BossState.Active;
         int currentHp;
@@ -171,9 +202,6 @@ namespace PPYY.Stage3
         bool leftHandBobPaused, rightHandBobPaused;
         float idleTime;
         bool sideMovePaused;
-        Sprite[] eyeOriginalSprites;
-        Coroutine eyeHurtRoutine;
-
         void Start()
         {
             currentHp = maxHp;
@@ -183,15 +211,6 @@ namespace PPYY.Stage3
 
             if (leftHand != null) leftHandBasePos = leftHand.localPosition;
             if (rightHand != null) rightHandBasePos = rightHand.localPosition;
-
-            if (eyeRenderers != null)
-            {
-                eyeOriginalSprites = new Sprite[eyeRenderers.Length];
-                for (int i = 0; i < eyeRenderers.Length; i++)
-                {
-                    if (eyeRenderers[i] != null) eyeOriginalSprites[i] = eyeRenderers[i].sprite;
-                }
-            }
 
             ResetMinionTimer();
             ResetBombTimer();
@@ -458,7 +477,7 @@ namespace PPYY.Stage3
             int damage = Random.Range(coreDamageMin, coreDamageMax + 1);
             currentHp = Mathf.Max(0, currentHp - damage);
             UpdateHpText();
-            ShowEyeHurtReaction();
+            NotifyEyes(autoRevert: true);
 
             if (currentHp <= 0)
             {
@@ -466,30 +485,14 @@ namespace PPYY.Stage3
             }
         }
 
-        // コアを攻撃された瞬間、目を痛がる見た目に切り替え、しばらくしたら元に戻す
-        void ShowEyeHurtReaction()
+        // 自分の子から目(Eyeロール)のStage3BossWeakPointを自動的に探して反応させる。
+        // Inspectorでの個別の参照設定は不要。autoRevert=falseなら変化させたまま戻さない
+        void NotifyEyes(bool autoRevert)
         {
-            if (eyeRenderers == null || eyeHurtSprite == null) return;
-
-            foreach (var r in eyeRenderers)
+            var weakPoints = GetComponentsInChildren<Stage3BossWeakPoint>();
+            foreach (var wp in weakPoints)
             {
-                if (r != null) r.sprite = eyeHurtSprite;
-            }
-
-            if (eyeHurtRoutine != null) StopCoroutine(eyeHurtRoutine);
-            eyeHurtRoutine = StartCoroutine(RevertEyesAfterDelay());
-        }
-
-        IEnumerator RevertEyesAfterDelay()
-        {
-            yield return new WaitForSeconds(eyeHurtDuration);
-
-            for (int i = 0; i < eyeRenderers.Length; i++)
-            {
-                if (eyeRenderers[i] != null && eyeOriginalSprites != null && i < eyeOriginalSprites.Length)
-                {
-                    eyeRenderers[i].sprite = eyeOriginalSprites[i];
-                }
+                if (wp.role == WeakPointRole.Eye) wp.PlayCoreHitReaction(autoRevert);
             }
         }
 
@@ -498,6 +501,15 @@ namespace PPYY.Stage3
             state = BossState.Defeated;
             StopAllCoroutines();
             ApplyMouthVisual(true); // 倒れた後は口を開けたままにする（音は鳴らさない）
+            NotifyEyes(autoRevert: false); // 目も攻撃された時と同じ見た目に変え、そのままにする
+
+            // ApplyMouthVisual(true)は口を開ける際にコアも一緒に表示してしまうため、
+            // 爆発が起こる前にコアの画像だけは改めて消しておく
+            if (core != null)
+            {
+                core.gameObject.SetActive(false);
+                core.SetVisible(false);
+            }
 
             if (bgm != null) bgm.Stop();
 
@@ -578,7 +590,7 @@ namespace PPYY.Stage3
             {
                 treasureRain.Play();
                 StartCoroutine(PlayVictoryBgmAfterDelay());
-                ShowBossDefeatedImage();
+                ShowBossDefeatedText();
             }
 
             float rainDuration = treasureRain != null ? treasureRain.spawnDuration + 1f : 0f;
@@ -600,49 +612,23 @@ namespace PPYY.Stage3
             }
         }
 
-        // 「ボス撃破」画像を拡大＋フェードで表示する。UI Image(RectTransform)/SpriteRendererどちらにも対応
-        void ShowBossDefeatedImage()
+        // 「ボス撃破」テキストを拡大＋フェードで表示する
+        void ShowBossDefeatedText()
         {
-            if (bossDefeatedImage == null) return;
+            if (bossDefeatedText == null) return;
 
-            bossDefeatedImage.SetActive(true);
+            bossDefeatedText.gameObject.SetActive(true);
 
-            var rect = bossDefeatedImage.GetComponent<RectTransform>();
-            Transform t = bossDefeatedImage.transform;
-            t.DOKill();
+            bossDefeatedText.rectTransform.DOKill();
+            bossDefeatedText.DOKill();
 
-            if (rect != null)
-            {
-                rect.localScale = Vector3.zero;
-                rect.DOScale(1f, bossDefeatedImageDuration).SetEase(bossDefeatedImageEase);
-            }
-            else
-            {
-                t.localScale = Vector3.zero;
-                t.DOScale(1f, bossDefeatedImageDuration).SetEase(bossDefeatedImageEase);
-            }
+            bossDefeatedText.rectTransform.localScale = Vector3.zero;
+            Color c = bossDefeatedText.color;
+            c.a = 0f;
+            bossDefeatedText.color = c;
 
-            var graphic = bossDefeatedImage.GetComponent<Graphic>();
-            if (graphic != null)
-            {
-                graphic.DOKill();
-                Color c = graphic.color;
-                c.a = 0f;
-                graphic.color = c;
-                graphic.DOFade(1f, bossDefeatedImageDuration).SetEase(bossDefeatedImageEase);
-            }
-            else
-            {
-                var sr = bossDefeatedImage.GetComponent<SpriteRenderer>();
-                if (sr != null)
-                {
-                    sr.DOKill();
-                    Color c = sr.color;
-                    c.a = 0f;
-                    sr.color = c;
-                    sr.DOFade(1f, bossDefeatedImageDuration).SetEase(bossDefeatedImageEase);
-                }
-            }
+            bossDefeatedText.rectTransform.DOScale(1f, bossDefeatedTextDuration).SetEase(bossDefeatedTextEase);
+            bossDefeatedText.DOFade(1f, bossDefeatedTextDuration).SetEase(bossDefeatedTextEase);
         }
 
         void BrightenBackground()
@@ -676,6 +662,19 @@ namespace PPYY.Stage3
         IEnumerator DelayedGoToNextScene(float delay)
         {
             yield return new WaitForSeconds(delay);
+
+            if (whiteoutImage != null)
+            {
+                whiteoutImage.gameObject.SetActive(true);
+                Color c = whiteoutImage.color;
+                c.a = 0f;
+                whiteoutImage.color = c;
+
+                whiteoutImage.DOKill();
+                whiteoutImage.DOFade(1f, whiteoutDuration);
+                yield return new WaitForSeconds(whiteoutDuration);
+            }
+
             GoToNextScene();
         }
 
@@ -686,8 +685,107 @@ namespace PPYY.Stage3
             SetMouthOpen(false);
 
             transform.DOKill();
-            transform.DOMoveY(transform.position.y + 6f, 1.2f).SetEase(Ease.InQuad)
-                .OnComplete(GoToNextScene);
+            StartCoroutine(FleeSequence());
+        }
+
+        void FadeOutBgm()
+        {
+            if (bgm == null) return;
+            bgm.DOKill();
+            bgm.DOFade(0f, bgmFadeOutDuration).OnComplete(() => bgm.Stop());
+        }
+
+        IEnumerator FleeSequence()
+        {
+            FadeOutBgm();
+
+            // ①逃走音とともに、本体が複数のゴーストに分裂してフェードで消える
+            SfxPlayer.Play(fleeSound, fleeSoundVolume);
+            yield return StartCoroutine(SplitIntoFleeGhosts());
+
+            // ②「ボス逃走」テキスト表示と③悲しい効果音を同時に再生
+            ShowBossFledText();
+            SfxPlayer.Play(sadSound, sadSoundVolume);
+
+            float textWait = bossFledTextDuration + bossFledTextHoldDuration;
+            float sadWait = sadSound != null ? sadSound.length : sadSoundFallbackHold;
+            yield return new WaitForSeconds(Mathf.Max(textWait, sadWait));
+
+            // ④ブラックアウト
+            yield return StartCoroutine(PlayFleeBlackout());
+
+            // ⑤次のステージへ
+            GoToNextScene();
+        }
+
+        // 本体を隠し、その場から複数のゴーストが散らばりながらフェードアウトする
+        IEnumerator SplitIntoFleeGhosts()
+        {
+            Vector3 origin = transform.position;
+
+            var bodyRenderers = GetComponentsInChildren<SpriteRenderer>();
+            foreach (var r in bodyRenderers) r.enabled = false;
+
+            if (fleeGhostPrefab == null) yield break;
+
+            var ghosts = new List<GameObject>();
+            for (int i = 0; i < fleeGhostCount; i++)
+            {
+                var ghost = Instantiate(fleeGhostPrefab, origin, Quaternion.identity);
+                ghosts.Add(ghost);
+
+                Vector2 offset = Random.insideUnitCircle * fleeGhostScatterRadius;
+                Vector3 target = origin + new Vector3(offset.x, offset.y, 0f);
+                ghost.transform.DOMove(target, fleeGhostScatterDuration).SetEase(Ease.OutQuad);
+            }
+
+            yield return new WaitForSeconds(fleeGhostScatterDuration);
+
+            foreach (var ghost in ghosts)
+            {
+                if (ghost == null) continue;
+                var sr = ghost.GetComponentInChildren<SpriteRenderer>();
+                if (sr != null) sr.DOFade(0f, fleeGhostFadeOutDuration);
+            }
+
+            yield return new WaitForSeconds(fleeGhostFadeOutDuration);
+
+            foreach (var ghost in ghosts)
+            {
+                if (ghost != null) Destroy(ghost);
+            }
+        }
+
+        // 「ボス逃走」テキストを拡大＋フェードで表示する
+        void ShowBossFledText()
+        {
+            if (bossFledText == null) return;
+
+            bossFledText.gameObject.SetActive(true);
+            bossFledText.rectTransform.DOKill();
+            bossFledText.DOKill();
+
+            bossFledText.rectTransform.localScale = Vector3.zero;
+            Color c = bossFledText.color;
+            c.a = 0f;
+            bossFledText.color = c;
+
+            bossFledText.rectTransform.DOScale(1f, bossFledTextDuration).SetEase(bossFledTextEase);
+            bossFledText.DOFade(1f, bossFledTextDuration).SetEase(bossFledTextEase);
+        }
+
+        IEnumerator PlayFleeBlackout()
+        {
+            if (fleeBlackoutImage == null) yield break;
+
+            fleeBlackoutImage.gameObject.SetActive(true);
+            Color c = fleeBlackoutImage.color;
+            c.a = 0f;
+            fleeBlackoutImage.color = c;
+
+            fleeBlackoutImage.DOKill();
+            fleeBlackoutImage.DOFade(1f, fleeBlackoutDuration);
+            yield return new WaitForSeconds(fleeBlackoutDuration);
         }
 
         void GoToNextScene()

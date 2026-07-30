@@ -43,6 +43,18 @@ namespace PPYY.Stage1
         public int mimicPenalty = -80;
         public int mimicDefeatBonus = 100;
 
+        [Header("ミミックの見た目（少し赤暗い色味＋カタカタ左右に揺れる）")]
+        public Color mimicColorTint = new Color(0.8f, 0.45f, 0.45f, 1f);
+        public float mimicShakeDistance = 0.05f;
+        public float mimicShakeDuration = 0.05f;
+        [Tooltip("揺れる時間")]
+        public float mimicShakeActiveDuration = 1f;
+        [Tooltip("静止する時間")]
+        public float mimicShakeRestDuration = 1f;
+
+        [Header("ミミックが一度もヒットされないまま放置されたら消えるまでの秒数（ランダム）")]
+        public Vector2 mimicIdleDisappearRange = new Vector2(4f, 8f);
+
         [Header("再出現タイミング")]
         public Vector2 respawnDelayRange = new Vector2(2f, 5f);
         public float fadeInDuration = 0.6f;
@@ -75,6 +87,9 @@ namespace PPYY.Stage1
 
         int mimicHitCount;
         Coroutine mimicTimeoutRoutine;
+        Coroutine mimicIdleTimeoutRoutine;
+        Coroutine mimicShakeRoutine;
+        Sequence mimicShakeSequence;
 
         Vector3 basePosition;
 
@@ -99,11 +114,82 @@ namespace PPYY.Stage1
 
             // サイズの違いは画像のみで表現する。transform.localScale は変更しない
             sr.sprite = closedSprites[(int)currentSize];
-            var c = sr.color;
-            c.a = 1f;
-            sr.color = c;
+            sr.color = isMimic ? mimicColorTint : Color.white; // ミミックは少し赤暗い色味にする
             sr.enabled = true;
             col.enabled = true;
+
+            if (isMimic)
+            {
+                StartMimicShake();
+                if (mimicIdleTimeoutRoutine != null) StopCoroutine(mimicIdleTimeoutRoutine);
+                mimicIdleTimeoutRoutine = StartCoroutine(MimicIdleDisappearRoutine());
+            }
+            else
+            {
+                StopMimicShake();
+            }
+        }
+
+        // ミミックの間、「mimicShakeActiveDuration秒揺れる → mimicShakeRestDuration秒静止する」を繰り返す
+        void StartMimicShake()
+        {
+            StopMimicShake();
+            mimicShakeRoutine = StartCoroutine(MimicShakeLoop());
+        }
+
+        void StopMimicShake()
+        {
+            if (mimicShakeRoutine != null)
+            {
+                StopCoroutine(mimicShakeRoutine);
+                mimicShakeRoutine = null;
+            }
+            // コルーチンを止めたタイミングによっては、揺れ中の無限ループSequenceが
+            // Kill()されずに残ってしまうため、参照を直接持って確実に止める
+            if (mimicShakeSequence != null)
+            {
+                mimicShakeSequence.Kill();
+                mimicShakeSequence = null;
+            }
+            transform.DOKill();
+            transform.position = basePosition;
+        }
+
+        IEnumerator MimicShakeLoop()
+        {
+            while (true)
+            {
+                mimicShakeSequence = DOTween.Sequence();
+                mimicShakeSequence.Append(transform.DOMoveX(basePosition.x - mimicShakeDistance, mimicShakeDuration).SetEase(Ease.InOutSine));
+                mimicShakeSequence.Append(transform.DOMoveX(basePosition.x + mimicShakeDistance, mimicShakeDuration * 2f).SetEase(Ease.InOutSine));
+                mimicShakeSequence.Append(transform.DOMoveX(basePosition.x, mimicShakeDuration).SetEase(Ease.InOutSine));
+                mimicShakeSequence.SetLoops(-1);
+
+                yield return new WaitForSeconds(mimicShakeActiveDuration);
+
+                if (mimicShakeSequence != null)
+                {
+                    mimicShakeSequence.Kill();
+                    mimicShakeSequence = null;
+                }
+                transform.position = basePosition;
+
+                yield return new WaitForSeconds(mimicShakeRestDuration);
+            }
+        }
+
+        // 一度もヒットされないまま mimicIdleDisappearRange 秒（ランダム）放置されたら、そのまま消える
+        IEnumerator MimicIdleDisappearRoutine()
+        {
+            float wait = Random.Range(mimicIdleDisappearRange.x, mimicIdleDisappearRange.y);
+            yield return new WaitForSeconds(wait);
+
+            if (state != ChestState.Closed) yield break; // 既にヒットされている等、対象外なら何もしない
+
+            StopMimicShake();
+            state = ChestState.Resolving;
+            col.enabled = false;
+            StartCoroutine(FlickerThenVanish());
         }
 
         public void OnHit(Vector2 worldPos)
@@ -161,6 +247,10 @@ namespace PPYY.Stage1
             if (state != ChestState.MimicEngaged)
             {
                 if (!Stage1ScoreManager.Instance.TryUseKey(side, mimicKeyCost)) return;
+
+                if (mimicIdleTimeoutRoutine != null) StopCoroutine(mimicIdleTimeoutRoutine);
+                StopMimicShake();
+
                 state = ChestState.MimicEngaged;
                 mimicHitCount = 0;
                 mimicTimeoutRoutine = StartCoroutine(MimicTimeoutRoutine());
