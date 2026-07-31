@@ -216,6 +216,7 @@ namespace PPYY.Stage1
             col.enabled = false;
             sr.sprite = openedSprites[(int)currentSize];
             Stage1ScoreManager.Instance.AddScore(side, scoreBySize[(int)currentSize]);
+            Stage1ScoreManager.Instance.AddChestOpened(side);
 
             StartCoroutine(PlaySoundThenPointsSound(openSound));
             PlayOpenAnimation();

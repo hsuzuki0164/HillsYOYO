@@ -522,6 +522,9 @@ namespace PPYY.Stage3
                 Stage3TreasureManager.Instance.AddPoints(PlayerSide.P2, bonus);
             }
 
+            GameSession.BossDefeated = true;
+            SaveFinalResultsToGameSession();
+
             StartCoroutine(DefeatSequence());
         }
 
@@ -684,8 +687,23 @@ namespace PPYY.Stage3
             StopAllCoroutines();
             SetMouthOpen(false);
 
+            GameSession.BossDefeated = false;
+            SaveFinalResultsToGameSession();
+
             transform.DOKill();
             StartCoroutine(FleeSequence());
+        }
+
+        // 結果発表画面で使う最終値をGameSessionへ書き込む（撃破・逃走どちらの場合も呼ばれる）
+        void SaveFinalResultsToGameSession()
+        {
+            if (Stage3TreasureManager.Instance == null) return;
+
+            GameSession.Stage3ScoreP1 = Stage3TreasureManager.Instance.GetPoints(PlayerSide.P1);
+            GameSession.Stage3ScoreP2 = Stage3TreasureManager.Instance.GetPoints(PlayerSide.P2);
+
+            GameSession.EnemiesDefeatedP1 = Stage3TreasureManager.Instance.GetEnemiesDefeated(PlayerSide.P1);
+            GameSession.EnemiesDefeatedP2 = Stage3TreasureManager.Instance.GetEnemiesDefeated(PlayerSide.P2);
         }
 
         void FadeOutBgm()

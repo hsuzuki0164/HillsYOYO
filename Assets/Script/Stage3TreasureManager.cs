@@ -29,6 +29,7 @@ namespace PPYY.Stage3
         public int debugStartPoints = 1000;
 
         int pointsP1, pointsP2;
+        int enemiesDefeatedP1, enemiesDefeatedP2;
 
         void Awake()
         {
@@ -53,9 +54,21 @@ namespace PPYY.Stage3
                 pointsP2 = Mathf.Max(0, GameSession.Stage2ScoreP2);
             }
 
+            // 倒した敵の数はステージ2からの累計を引き継ぐ
+            enemiesDefeatedP1 = GameSession.EnemiesDefeatedP1;
+            enemiesDefeatedP2 = GameSession.EnemiesDefeatedP2;
+
             RefreshVisual(PlayerSide.P1);
             RefreshVisual(PlayerSide.P2);
         }
+
+        public void AddEnemyDefeated(PlayerSide side)
+        {
+            if (side == PlayerSide.P1) enemiesDefeatedP1++;
+            else enemiesDefeatedP2++;
+        }
+
+        public int GetEnemiesDefeated(PlayerSide side) => side == PlayerSide.P1 ? enemiesDefeatedP1 : enemiesDefeatedP2;
 
         public PlayerSide GetSideFromWorldX(float worldX)
         {

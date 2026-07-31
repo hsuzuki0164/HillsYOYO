@@ -39,6 +39,15 @@ namespace PPYY.Stage1
                 {
                     GameSession.Stage1ScoreP1 = Stage1ScoreManager.Instance.GetScore(PlayerSide.P1);
                     GameSession.Stage1ScoreP2 = Stage1ScoreManager.Instance.GetScore(PlayerSide.P2);
+
+                    GameSession.KeysCollectedP1 = Stage1ScoreManager.Instance.GetTotalKeysCollected(PlayerSide.P1);
+                    GameSession.KeysCollectedP2 = Stage1ScoreManager.Instance.GetTotalKeysCollected(PlayerSide.P2);
+
+                    GameSession.ChestsOpenedP1 = Stage1ScoreManager.Instance.GetChestsOpened(PlayerSide.P1);
+                    GameSession.ChestsOpenedP2 = Stage1ScoreManager.Instance.GetChestsOpened(PlayerSide.P2);
+
+                    GameSession.EnemiesDefeatedP1 = Stage1ScoreManager.Instance.GetEnemiesDefeated(PlayerSide.P1);
+                    GameSession.EnemiesDefeatedP2 = Stage1ScoreManager.Instance.GetEnemiesDefeated(PlayerSide.P2);
                 }
 
                 if (PPYY.StageTransition.Instance != null)

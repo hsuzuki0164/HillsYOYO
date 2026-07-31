@@ -3629,7 +3629,7 @@ MonoBehaviour:
   maxHp: 3000
   hpText: {fileID: 174622629}
   hpBarImage: {fileID: 537433302}
-  weakPointHitsToExpose: 10
+  weakPointHitsToExpose: 6
   weakPointCounterText: {fileID: 0}
   coreExposureDuration: 3
   mouthClosedVisual: {fileID: 0}
@@ -3676,7 +3676,7 @@ MonoBehaviour:
   sideMoveEase: 6
   timeLimit: 30
   timerText: {fileID: 23575283}
-  nextSceneName: 
+  nextSceneName: Result
   maxVictoryBonus: 5000
   explosionEffectPrefab: {fileID: 8650938231098632368, guid: 6ba1454cd4061fa449ba3e22578c5d5d, type: 3}
   explosionDuration: 5

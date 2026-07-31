@@ -200,6 +200,7 @@ namespace PPYY.Stage1
             PlayerSide side = Stage1ScoreManager.Instance.GetSideFromWorldX(worldPos.x);
             int reward = Random.Range(keyRewardMin, keyRewardMax + 1);
             Stage1ScoreManager.Instance.AddKey(side, reward);
+            Stage1ScoreManager.Instance.AddEnemyDefeated(side);
 
             SpawnHitEffect();
             PlayHitSound();

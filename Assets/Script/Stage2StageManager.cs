@@ -42,6 +42,9 @@ namespace PPYY.Stage2
                 {
                     GameSession.Stage2ScoreP1 = Stage2TreasureManager.Instance.GetPoints(PlayerSide.P1);
                     GameSession.Stage2ScoreP2 = Stage2TreasureManager.Instance.GetPoints(PlayerSide.P2);
+
+                    GameSession.EnemiesDefeatedP1 = Stage2TreasureManager.Instance.GetEnemiesDefeated(PlayerSide.P1);
+                    GameSession.EnemiesDefeatedP2 = Stage2TreasureManager.Instance.GetEnemiesDefeated(PlayerSide.P2);
                 }
 
                 if (PPYY.StageTransition.Instance != null)

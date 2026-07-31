@@ -302,11 +302,13 @@ namespace PPYY.Stage2
             defeated = true;
             col.enabled = false;
 
+            PlayerSide hitterSide = Stage2TreasureManager.Instance.GetSideFromWorldX(worldPos.x);
+            Stage2TreasureManager.Instance.AddEnemyDefeated(hitterSide);
+
             // ドル袋を持っている状態で倒すと、倒した側のプレイヤーに盗まれた点数が入る
             // (盗まれた本人が倒せば取り返し、相手側が倒せば横取りになる)
             if (hasLoot)
             {
-                PlayerSide hitterSide = Stage2TreasureManager.Instance.GetSideFromWorldX(worldPos.x);
                 Stage2TreasureManager.Instance.AddPoints(hitterSide, lootAmount);
             }
 

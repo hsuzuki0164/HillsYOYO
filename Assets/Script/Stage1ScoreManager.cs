@@ -25,6 +25,11 @@ namespace PPYY.Stage1
         int scoreP1, scoreP2;
         int keyP1, keyP2;
 
+        // 結果発表用の累計値。keyP1/P2は宝箱開封で消費されるため、消費されない累計はこちらで別途持つ
+        int totalKeyP1, totalKeyP2;
+        int chestsOpenedP1, chestsOpenedP2;
+        int enemiesDefeatedP1, enemiesDefeatedP2;
+
         void Awake()
         {
             if (Instance != null && Instance != this)
@@ -54,9 +59,21 @@ namespace PPYY.Stage1
 
         public void AddKey(PlayerSide side, int amount = 1)
         {
-            if (side == PlayerSide.P1) keyP1 += amount;
-            else keyP2 += amount;
+            if (side == PlayerSide.P1) { keyP1 += amount; totalKeyP1 += amount; }
+            else { keyP2 += amount; totalKeyP2 += amount; }
             RefreshUI();
+        }
+
+        public void AddChestOpened(PlayerSide side)
+        {
+            if (side == PlayerSide.P1) chestsOpenedP1++;
+            else chestsOpenedP2++;
+        }
+
+        public void AddEnemyDefeated(PlayerSide side)
+        {
+            if (side == PlayerSide.P1) enemiesDefeatedP1++;
+            else enemiesDefeatedP2++;
         }
 
         // 鍵が cost 未満なら false を返し、消費しない
@@ -78,6 +95,9 @@ namespace PPYY.Stage1
 
         public int GetScore(PlayerSide side) => side == PlayerSide.P1 ? scoreP1 : scoreP2;
         public int GetKeys(PlayerSide side) => side == PlayerSide.P1 ? keyP1 : keyP2;
+        public int GetTotalKeysCollected(PlayerSide side) => side == PlayerSide.P1 ? totalKeyP1 : totalKeyP2;
+        public int GetChestsOpened(PlayerSide side) => side == PlayerSide.P1 ? chestsOpenedP1 : chestsOpenedP2;
+        public int GetEnemiesDefeated(PlayerSide side) => side == PlayerSide.P1 ? enemiesDefeatedP1 : enemiesDefeatedP2;
 
         void RefreshUI()
         {

@@ -73,6 +73,12 @@ namespace PPYY.Stage3
             defeated = true;
             col.enabled = false;
 
+            if (Stage3TreasureManager.Instance != null)
+            {
+                PlayerSide side = Stage3TreasureManager.Instance.GetSideFromWorldX(worldPos.x);
+                Stage3TreasureManager.Instance.AddEnemyDefeated(side);
+            }
+
             SpawnHitEffect();
             if (hitSounds != null && hitSounds.Length > 0)
             {
