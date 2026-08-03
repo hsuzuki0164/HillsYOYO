@@ -1,4 +1,5 @@
 using UnityEngine;
+using PPYY.Lidar;
 
 namespace PPYY.Stage1
 {
@@ -13,11 +14,26 @@ namespace PPYY.Stage1
         [Tooltip("ヒット判定の許容半径。ペーパーヨーヨーの当たりの太さに合わせて調整する")]
         public float hitRadius = 0.3f;
 
+        void OnEnable()
+        {
+            // LidarSensorBridgeはシーンをまたいで常駐しているため、このシーンのInputManagerから毎回購読する
+            if (LidarSensorBridge.Instance != null)
+            {
+                LidarSensorBridge.Instance.OnHit += ProcessHit;
+            }
+        }
+
+        void OnDisable()
+        {
+            if (LidarSensorBridge.Instance != null)
+            {
+                LidarSensorBridge.Instance.OnHit -= ProcessHit;
+            }
+        }
+
         void Update()
         {
-            // 開発用の仮入力（マウスクリック）。
-            // 実機のペーパーヨーヨー入力を組み込む際は、検出処理から
-            // ProcessHit(worldPos) を直接呼び出せば同じ経路でヒット判定できる。
+            // 開発用の仮入力（マウスクリック）。実機ではLidarSensorBridge経由のProcessHit呼び出しがこれと同じ経路を通る。
             if (Input.GetMouseButtonDown(0))
             {
                 Vector3 world = Camera.main.ScreenToWorldPoint(Input.mousePosition);

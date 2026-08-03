@@ -92,12 +92,14 @@ namespace PPYY.Stage1
         Sequence mimicShakeSequence;
 
         Vector3 basePosition;
+        Vector3 baseScale;
 
         void Awake()
         {
             sr = GetComponent<SpriteRenderer>();
             col = GetComponent<Collider2D>();
             basePosition = transform.position;
+            baseScale = transform.localScale;
         }
 
         void Start()
@@ -264,6 +266,9 @@ namespace PPYY.Stage1
 
             mimicHitCount++;
             transform.DOKill();
+            // 連打（LIDARの1タッチで複数回ヒットするケースを含む）でパンチ後の縮小が積み重なって
+            // 戻らなくなるのを防ぐため、毎回スケールを基準値に戻してから再生する
+            transform.localScale = baseScale;
             transform.DOPunchScale(Vector3.one * 0.15f, 0.15f, 1, 0);
 
             if (mimicHitCount >= mimicHitsToDefeat)

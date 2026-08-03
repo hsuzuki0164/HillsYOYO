@@ -54,11 +54,13 @@ namespace PPYY.Stage3
         SpriteRenderer sr;
         Sprite eyeOriginalSprite;
         Coroutine eyeHurtRoutine;
+        Vector3 baseScale;
 
         void Awake()
         {
             baseLocalPos = transform.localPosition;
             idlePhaseOffset = Random.Range(0f, Mathf.PI * 2f); // 左右の目で動きをずらす
+            baseScale = transform.localScale;
 
             sr = GetComponentInChildren<SpriteRenderer>();
             if (sr != null) eyeOriginalSprite = sr.sprite;
@@ -150,6 +152,9 @@ namespace PPYY.Stage3
         public void OnHit(Vector2 worldPos)
         {
             transform.DOKill();
+            // DOKill()はアニメーション途中の値で止まるため、連打（LIDARの1タッチで複数回ヒットするケースを含む）で
+            // パンチ後の縮小が積み重なって戻らなくなるのを防ぐため、毎回スケールを基準値に戻してから再生する
+            transform.localScale = baseScale;
             transform.DOPunchScale(Vector3.one * punchScale, punchDuration, 1, 0);
 
             if (hitEffectPrefabs != null && hitEffectPrefabs.Length > 0)

@@ -19,10 +19,12 @@ namespace PPYY.Stage3
         [Range(0f, 1f)] public float hitSoundVolume = 1f;
 
         SpriteRenderer sr;
+        Vector3 baseScale;
 
         void Awake()
         {
             sr = GetComponentInChildren<SpriteRenderer>();
+            baseScale = transform.localScale;
         }
 
         // SpriteRenderer自体のEnabledが編集ミス等でOFFのままでも表示できるよう、
@@ -35,6 +37,9 @@ namespace PPYY.Stage3
         public void OnHit(Vector2 worldPos)
         {
             transform.DOKill();
+            // 連打（LIDARの1タッチで複数回ヒットするケースを含む）でパンチ後の縮小が積み重なって
+            // 戻らなくなるのを防ぐため、毎回スケールを基準値に戻してから再生する
+            transform.localScale = baseScale;
             transform.DOPunchScale(Vector3.one * punchScale, punchDuration, 1, 0);
 
             if (hitEffectPrefabs != null && hitEffectPrefabs.Length > 0)

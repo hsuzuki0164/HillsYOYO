@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "jp.curiosity-inc.urg-unity": "file:../../urg-unity-master/Packages/jp.curiosity-inc.urg-unity",
     "com.unity.collab-proxy": "2.12.4",
     "com.unity.feature.2d": "2.0.1",
     "com.unity.ide.rider": "3.0.36",

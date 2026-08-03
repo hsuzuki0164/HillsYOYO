@@ -3674,7 +3674,7 @@ MonoBehaviour:
   sideMoveRangeX: 2
   sideMoveDuration: 0.25
   sideMoveEase: 6
-  timeLimit: 30
+  timeLimit: 90
   timerText: {fileID: 23575283}
   nextSceneName: Result
   maxVictoryBonus: 5000

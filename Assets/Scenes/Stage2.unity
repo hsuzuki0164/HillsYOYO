@@ -162,7 +162,7 @@ MonoBehaviour:
   boundsMin: {x: -8, y: -4}
   boundsMax: {x: 8, y: 4}
   swarmIntervalMin: 30
-  swarmIntervalMax: 120
+  swarmIntervalMax: 90
   swarmSizeMin: 6
   swarmSizeMax: 60
   swarmWarningDuration: 2.6
@@ -1309,7 +1309,7 @@ MonoBehaviour:
   boundsMin: {x: -8, y: -4}
   boundsMax: {x: 8, y: 4}
   swarmIntervalMin: 30
-  swarmIntervalMax: 120
+  swarmIntervalMax: 90
   swarmSizeMin: 20
   swarmSizeMax: 60
   swarmWarningDuration: 2.6
@@ -2700,7 +2700,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c18ee5e63660f4fb1e3014b4a58b2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLimit: 20
+  timeLimit: 90
   nextSceneName: Stage3
   timerText: {fileID: 1002939027}
 --- !u!1 &1886130499

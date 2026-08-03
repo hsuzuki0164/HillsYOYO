@@ -221,6 +221,12 @@
       },
       "url": "https://packages.unity.com"
     },
+    "jp.curiosity-inc.urg-unity": {
+      "version": "file:../../urg-unity-master/Packages/jp.curiosity-inc.urg-unity",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,
