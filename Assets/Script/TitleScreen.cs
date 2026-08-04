@@ -48,6 +48,9 @@ namespace PPYY
         public Button startButton;
         public float startButtonFadeInDuration = 0.5f;
 
+        [Header("バーコードスキャン連携（任意。設定すると1P/2P両方の読み取り完了までスタートボタンを押せないようにする）")]
+        public PlayerArtworkScanner artworkScanner;
+
         [Header("8. スタートボタンを押した時（点滅＋効果音）")]
         public AudioClip startSound;
         [Range(0f, 1f)] public float startSoundVolume = 1f;
@@ -67,6 +70,12 @@ namespace PPYY
         bool titleFloating;
         float floatTime;
         bool started;
+        bool introReachedStartStep;
+
+        // 2周目以降のタイトルシーン再読み込み時、artworkScannerのシーン内参照は
+        // すぐ破棄される複製オブジェクトを指してしまうことがあるため、常駐している
+        // 実体（PlayerArtworkScanner.Instance）をStart時に解決して使う
+        PlayerArtworkScanner activeScanner;
 
         void Start()
         {
@@ -84,7 +93,50 @@ namespace PPYY
                 startButton.onClick.AddListener(OnStartButtonClicked);
             }
 
+            // artworkScannerが設定されていれば連携機能を使う、という意味のフラグとして扱い、
+            // 実際に購読する相手は常に生きている方のシングルトンにする
+            activeScanner = artworkScanner != null ? PlayerArtworkScanner.Instance : null;
+            if (activeScanner != null)
+            {
+                activeScanner.OnBothReady += HandleArtworkBothReady;
+                activeScanner.OnReset += HandleArtworkReset;
+            }
+
             StartCoroutine(IntroSequence());
+        }
+
+        void OnDestroy()
+        {
+            if (activeScanner != null)
+            {
+                activeScanner.OnBothReady -= HandleArtworkBothReady;
+                activeScanner.OnReset -= HandleArtworkReset;
+            }
+        }
+
+        void HandleArtworkBothReady()
+        {
+            TryEnableStartButton();
+        }
+
+        // 読み取りがリセットされた場合、スタートボタンを再び押せない状態に戻す
+        void HandleArtworkReset()
+        {
+            if (startButtonGroup == null) return;
+            startButtonGroup.interactable = false;
+            startButtonGroup.blocksRaycasts = false;
+        }
+
+        // 演出でボタンがフェードインし終わっていて、かつ(設定されていれば)1P/2P両方の読み取りが
+        // 完了していれば、スタートボタンを押せるようにする
+        void TryEnableStartButton()
+        {
+            if (!introReachedStartStep) return;
+            if (activeScanner != null && !activeScanner.BothReady) return;
+            if (startButtonGroup == null) return;
+
+            startButtonGroup.interactable = true;
+            startButtonGroup.blocksRaycasts = true;
         }
 
         void Update()
@@ -180,14 +232,15 @@ namespace PPYY
             SlideInObjects(rightObjects, rightOriginalPos);
             yield return new WaitForSeconds(sideSlideInDuration);
 
-            // 7. スタートボタンがフェードイン
+            // 7. スタートボタンがフェードイン（見た目はここで表示するが、押せるかどうかは
+            // バーコード読み取りの完了状況を見てTryEnableStartButtonが判断する）
             if (startButtonGroup != null)
             {
                 startButtonGroup.DOKill();
                 startButtonGroup.DOFade(1f, startButtonFadeInDuration);
-                startButtonGroup.interactable = true;
-                startButtonGroup.blocksRaycasts = true;
             }
+            introReachedStartStep = true;
+            TryEnableStartButton();
         }
 
         void FadeInGroups(CanvasGroup[] groups)

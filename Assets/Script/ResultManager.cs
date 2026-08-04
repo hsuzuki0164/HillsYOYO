@@ -21,6 +21,10 @@ namespace PPYY
             [Tooltip("記録した側（1P/2P）")]
             public TextMeshProUGUI labelText;
             public TextMeshProUGUI scoreText;
+            [Tooltip("そのプレイの似顔絵（記録にartworkIdが無い古いデータの場合は非表示になる）")]
+            public Image portraitImage;
+            [Tooltip("そのプレイのなまえ（記録にartworkIdが無い古いデータの場合は非表示になる）")]
+            public Image nameImage;
         }
 
         [Header("画面のホワイトイン（シーン開始時、白画面から表示される）")]
@@ -56,6 +60,12 @@ namespace PPYY
         public TextMeshProUGUI bossResultText;
         public string bossDefeatedLabel = "ボス撃破！";
         public string bossFledLabel = "ボス撃破ならず…";
+
+        [Header("プレイヤー本人の落書き画像（タイトルで読み取ったもの。未読み込み時は非表示のまま）")]
+        public Image p1PortraitImage;
+        public Image p2PortraitImage;
+        public Image p1NameImage;
+        public Image p2NameImage;
 
         [Header("最終スコアのボーナス倍率")]
         public int pointsPerKey = 100;
@@ -162,9 +172,14 @@ namespace PPYY
                 bossResultText.text = GameSession.BossDefeated ? bossDefeatedLabel : bossFledLabel;
             }
 
+            SetSprite(p1PortraitImage, PlayerArtwork.PortraitP1);
+            SetSprite(p2PortraitImage, PlayerArtwork.PortraitP2);
+            SetSprite(p1NameImage, PlayerArtwork.NameP1);
+            SetSprite(p2NameImage, PlayerArtwork.NameP2);
+
             // 今回の1P/2Pの最終スコアを履歴に記録し、その順位・全体ランキングを表示する
-            var p1Entry = ScoreHistory.AddEntry("1P", p1Score);
-            var p2Entry = ScoreHistory.AddEntry("2P", p2Score);
+            var p1Entry = ScoreHistory.AddEntry("1P", p1Score, GameSession.ArtworkIdP1);
+            var p2Entry = ScoreHistory.AddEntry("2P", p2Score, GameSession.ArtworkIdP2);
 
             SetRankText(p1RankText, ScoreHistory.GetRank(p1Entry));
             SetRankText(p2RankText, ScoreHistory.GetRank(p2Entry));
@@ -232,6 +247,9 @@ namespace PPYY
                 if (slot.rankText != null) slot.rankText.text = (i + 1).ToString();
                 if (slot.labelText != null) slot.labelText.text = "";
                 if (slot.scoreText != null) slot.scoreText.text = "";
+                // 白い矩形のまま表示されてしまうため、各行が確定するまでは非表示にしておく
+                if (slot.portraitImage != null) slot.portraitImage.gameObject.SetActive(false);
+                if (slot.nameImage != null) slot.nameImage.gameObject.SetActive(false);
             }
 
             if (drumrollAudioSource != null && drumrollSound != null)
@@ -255,12 +273,15 @@ namespace PPYY
                     var entry = topEntries[i];
                     if (slot.labelText != null) slot.labelText.text = entry.label;
                     if (slot.scoreText != null) slot.scoreText.text = entry.score.ToString("N0");
+                    SetRankingArtwork(slot, entry.artworkId);
                 }
                 else
                 {
                     // 履歴がまだ枠数に満たない場合、余った行は空欄で確定させる
                     if (slot.labelText != null) slot.labelText.text = "-";
                     if (slot.scoreText != null) slot.scoreText.text = "-";
+                    if (slot.portraitImage != null) slot.portraitImage.gameObject.SetActive(false);
+                    if (slot.nameImage != null) slot.nameImage.gameObject.SetActive(false);
                 }
 
                 PlayConfirmPunch(slot);
@@ -343,6 +364,36 @@ namespace PPYY
         void SetText(TextMeshProUGUI text, int value)
         {
             if (text != null) text.text = value.ToString("N0");
+        }
+
+        void SetSprite(Image image, Sprite sprite)
+        {
+            if (image == null) return;
+            image.sprite = sprite;
+            image.gameObject.SetActive(sprite != null);
+        }
+
+        // 歴代ランキングの各行に、そのプレイのartworkIdから似顔絵・なまえを読み込んで表示する。
+        // artworkIdが無い（古い記録・未スキャンで記録された）場合や画像が既に無い場合は非表示のままにする
+        void SetRankingArtwork(RankingSlot slot, string artworkId)
+        {
+            if (slot.portraitImage == null && slot.nameImage == null) return;
+
+            Texture2D tex = null;
+            bool loaded = !string.IsNullOrEmpty(artworkId) && PlayerArtworkScanner.Instance != null
+                && PlayerArtworkScanner.Instance.TryLoadTextureById(artworkId, out tex);
+
+            if (slot.portraitImage != null)
+            {
+                slot.portraitImage.sprite = loaded ? PlayerArtworkScanner.Instance.CropPortrait(tex) : null;
+                slot.portraitImage.gameObject.SetActive(loaded);
+            }
+
+            if (slot.nameImage != null)
+            {
+                slot.nameImage.sprite = loaded ? PlayerArtworkScanner.Instance.CropName(tex) : null;
+                slot.nameImage.gameObject.SetActive(loaded);
+            }
         }
     }
 }

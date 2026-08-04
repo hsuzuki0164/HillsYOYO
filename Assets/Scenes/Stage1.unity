@@ -3928,7 +3928,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc3ec317e869c4340a832d65c3096fc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLimit: 90
+  timeLimit: 30
   nextSceneName: Stage2
   timerText: {fileID: 2000274629}
 --- !u!1 &2059658529

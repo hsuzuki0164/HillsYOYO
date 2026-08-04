@@ -222,9 +222,9 @@
       "url": "https://packages.unity.com"
     },
     "jp.curiosity-inc.urg-unity": {
-      "version": "file:../../urg-unity-master/Packages/jp.curiosity-inc.urg-unity",
+      "version": "file:jp.curiosity-inc.urg-unity",
       "depth": 0,
-      "source": "local",
+      "source": "embedded",
       "dependencies": {}
     },
     "com.unity.modules.ai": {

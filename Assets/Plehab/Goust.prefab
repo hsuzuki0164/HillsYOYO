@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3382329710972207735}
   - component: {fileID: 6413199657710715171}
   - component: {fileID: 201406110521630686}
+  - component: {fileID: 8867654976949792609}
   m_Layer: 0
   m_Name: Goust
   m_TagString: Untagged
@@ -165,3 +166,15 @@ MonoBehaviour:
   hitSoundVolume: 1
   boundsMin: {x: -8, y: -4}
   boundsMax: {x: 8, y: 4}
+--- !u!114 &8867654976949792609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6017899327036943353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 858506f2c83f6e546881ee594f5f80c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

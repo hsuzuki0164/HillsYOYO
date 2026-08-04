@@ -26,5 +26,10 @@ namespace PPYY
 
         // ボスは1P/2P共通の敵のため、結果は1つだけ持つ
         public static bool BossDefeated;
+
+        // タイトルでバーコード読み取りした際のファイル名（＝スキャン画像のID）。
+        // 結果発表画面でランキング履歴に紐づけて保存し、過去分の似顔絵再表示に使う
+        public static string ArtworkIdP1;
+        public static string ArtworkIdP2;
     }
 }

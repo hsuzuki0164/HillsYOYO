@@ -183,6 +183,24 @@ namespace PPYY.Stage2
                 {
                     dollBagRenderer.sprite = dollBagSprites[tier];
                 }
+
+                // 盗まれた側の本人が描いたお宝袋の絵が読み込まれていれば、そちらを優先して使う。
+                // スキャン画像の切り抜きサイズは元のドル袋画像と無関係なため、dollBagScaleで
+                // 設定した見た目の大きさを保てるよう縮尺を補正する
+                var customBag = PlayerArtwork.GetMoneyBag(targetSide);
+                if (customBag != null)
+                {
+                    Vector2 originalSize = dollBagRenderer.sprite != null ? dollBagRenderer.sprite.bounds.size : Vector2.one;
+                    dollBagRenderer.sprite = customBag;
+
+                    Vector2 newSize = customBag.bounds.size;
+                    if (newSize.x > 0.0001f && newSize.y > 0.0001f)
+                    {
+                        float scale = ((originalSize.x / newSize.x) + (originalSize.y / newSize.y)) * 0.5f;
+                        dollBagRenderer.transform.localScale = dollBagScale * scale;
+                    }
+                }
+
                 dollBagRenderer.gameObject.SetActive(true);
             }
 

@@ -10,6 +10,9 @@ namespace PPYY
     {
         public string label; // 記録したプレイヤー側。"1P" / "2P" を想定
         public int score;
+        // タイトルで読み取ったバーコード（＝スキャン画像のファイル名）。
+        // 過去分のランキング表示で、本人の似顔絵を再読み込みするのに使う。旧データには入っていないので空の場合がある
+        public string artworkId;
     }
 
     [Serializable]
@@ -25,10 +28,10 @@ namespace PPYY
         const string PrefsKey = "PPYY_ScoreHistory";
 
         // 履歴に新しい記録を追加して保存し、追加したエントリを返す（GetRankにそのまま渡せる）
-        public static ScoreEntry AddEntry(string label, int score)
+        public static ScoreEntry AddEntry(string label, int score, string artworkId = null)
         {
             var data = Load();
-            var entry = new ScoreEntry { label = label, score = score };
+            var entry = new ScoreEntry { label = label, score = score, artworkId = artworkId };
             data.entries.Add(entry);
             Save(data);
             return entry;
