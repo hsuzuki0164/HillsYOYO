@@ -44,9 +44,16 @@ namespace PPYY.Stage1
         public void ProcessHit(Vector2 worldPos)
         {
             Collider2D[] hits = Physics2D.OverlapCircleAll(worldPos, hitRadius);
+
+            if (hits.Length == 0)
+            {
+                Debug.Log($"[Stage1InputManager] ProcessHit worldPos={worldPos} radius={hitRadius} -> ヒットしたコライダーなし");
+            }
+
             foreach (var col in hits)
             {
                 var hittable = col.GetComponentInParent<IHittable>();
+                Debug.Log($"[Stage1InputManager] ProcessHit worldPos={worldPos} radius={hitRadius} -> collider={col.name} IHittable={(hittable != null)}");
                 hittable?.OnHit(worldPos);
             }
         }

@@ -40,6 +40,9 @@ namespace PPYY.Stage3
 
         public void OnHit(Vector2 worldPos)
         {
+            // 出現演出中〜カウントダウン終了まではTime.timeScaleが0のため、その間はヒットを無効にする
+            if (Time.timeScale == 0f) return;
+
             // クールダウン中のヒットは完全に無視する（エフェクト・ダメージとも発生させない）
             if (Time.time - lastHitTime < hitCooldown) return;
             lastHitTime = Time.time;

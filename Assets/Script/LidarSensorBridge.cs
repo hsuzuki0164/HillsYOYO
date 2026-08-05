@@ -41,8 +41,8 @@ namespace PPYY.Lidar
 
         [Header("デバッグ表示（ビルド後の実機でもLIDARがどこを検出しているか確認できる。Gizmosではなく実オブジェクトなのでビルドでも見える）")]
         public bool showDebugMarkers = false;
-        [Tooltip("実行中にこのキーでON/OFFを切り替えられる")]
-        public KeyCode toggleDebugMarkersKey = KeyCode.F1;
+        [Tooltip("実行中にShiftを押しながらこのキーを押すとON/OFFを切り替えられる")]
+        public KeyCode toggleDebugMarkersKey = KeyCode.D;
         [Tooltip("現在検出中の（クールダウンで抑制されている場合も含む）クラスタ位置に常時表示するマーカーの色")]
         public Color trackingMarkerColor = new Color(0f, 1f, 1f, 0.6f);
         [Tooltip("実際にOnHitが発火した瞬間だけ一瞬表示するマーカーの色")]
@@ -112,7 +112,8 @@ namespace PPYY.Lidar
 
         void Update()
         {
-            if (Input.GetKeyDown(toggleDebugMarkersKey))
+            bool shiftHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+            if (shiftHeld && Input.GetKeyDown(toggleDebugMarkersKey))
             {
                 showDebugMarkers = !showDebugMarkers;
                 Debug.Log($"LIDARデバッグ表示: {(showDebugMarkers ? "ON" : "OFF")}");
@@ -165,6 +166,12 @@ namespace PPYY.Lidar
 
                 recentHits.Add(new RecentHit { position = hitPos, time = Time.time });
                 if (showDebugMarkers) SpawnHitFlashMarker(hitPos);
+
+                var mainCam = Camera.main;
+                Debug.Log($"[Lidar] OnHit worldPos={hitPos} scene={UnityEngine.SceneManagement.SceneManager.GetActiveScene().name} " +
+                    $"camera={(mainCam != null ? mainCam.name : "null")} camPos={(mainCam != null ? (Vector2)mainCam.transform.position : Vector2.zero)} " +
+                    $"orthoSize={(mainCam != null && mainCam.orthographic ? mainCam.orthographicSize.ToString() : "n/a")}");
+
                 OnHit?.Invoke(hitPos);
             }
 

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6017899327036943353
+--- !u!1 &5918957109519586383
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,39 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8134015534497969825}
-  - component: {fileID: 3382329710972207735}
-  - component: {fileID: 6413199657710715171}
-  - component: {fileID: 201406110521630686}
-  - component: {fileID: 8867654976949792609}
+  - component: {fileID: 196431646544487149}
+  - component: {fileID: 4780682904782701485}
+  - component: {fileID: 2288604598600315486}
+  - component: {fileID: 4869114172402541630}
   m_Layer: 0
-  m_Name: Goust
+  m_Name: sClow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8134015534497969825
+--- !u!4 &196431646544487149
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6017899327036943353}
+  m_GameObject: {fileID: 5918957109519586383}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
-  m_LocalPosition: {x: -11.3, y: 0.93, z: 0}
-  m_LocalScale: {x: 0.115172155, y: 0.115172155, z: 0.115172155}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
---- !u!212 &3382329710972207735
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &4780682904782701485
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6017899327036943353}
+  m_GameObject: {fileID: 5918957109519586383}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -76,24 +75,24 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 2cb1213b962dddd41975f33d91021904, type: 3}
+  m_Sprite: {fileID: -387008750, guid: 998add12c525f134da29a4dbe7694695, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 12.54, y: 12.54}
+  m_Size: {x: 14.48, y: 10.86}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &6413199657710715171
+--- !u!61 &2288604598600315486
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6017899327036943353}
+  m_GameObject: {fileID: 5918957109519586383}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -123,58 +122,45 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 12.54, y: 12.54}
-    newSize: {x: 12.54, y: 12.54}
+    oldSize: {x: 3.9, y: 3.41}
+    newSize: {x: 14.48, y: 10.86}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 12.54, y: 12.54}
+  m_Size: {x: 14.48, y: 10.86}
   m_EdgeRadius: 0
---- !u!114 &201406110521630686
+--- !u!114 &4869114172402541630
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6017899327036943353}
+  m_GameObject: {fileID: 5918957109519586383}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4499967fff0585341b467b366cee5c6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveType: 1
+  moveType: 0
   crowSpeed: 3
   ghostSpeed: 1.5
-  ratSpeed: 7
+  ratSpeed: 5
   baseFacesRight: 0
-  waveAmplitude: 2
-  waveFrequency: 4
-  keyRewardMin: 1
-  keyRewardMax: 8
+  waveAmplitude: 1
+  waveFrequency: 2
+  keyRewardMin: 2
+  keyRewardMax: 4
   fadeOutDuration: 0.4
   hitEffectPrefabs:
-  - {fileID: 2150967500386247403, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
-  - {fileID: 3432958286849152088, guid: 87ee7299dd44ed747af24dbb91bcd33b, type: 3}
-  - {fileID: 363920278307669088, guid: e24dccc0a30b0574c956811d1833180c, type: 3}
+  - {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
+  - {fileID: 2427786012956944610, guid: da0de216ad60c5d46a6b049d61961615, type: 3}
+  - {fileID: 3308840082544497919, guid: af0ef20d9a41ee7479f76ea5c49918cf, type: 3}
   hitSounds:
-  - {fileID: 8300000, guid: c5d80edeacea58b4ba1cc2cc8fcb2218, type: 3}
-  - {fileID: 8300000, guid: d56a97477937dc54096e470515d1a8fa, type: 3}
-  - {fileID: 8300000, guid: 182abe2e67c25584faf35c120c4bf859, type: 3}
-  - {fileID: 8300000, guid: 5c40c03e18a81344bb35fadb3ab38e91, type: 3}
+  - {fileID: 8300000, guid: ac5fd96b1e3a0c6448ce008b746fba9a, type: 3}
+  - {fileID: 8300000, guid: c6c4e3b76d9507a469ff6001f0c7e135, type: 3}
+  - {fileID: 8300000, guid: e9eba3d7bb97d1e4a9656b0a99f210e9, type: 3}
   hitSoundVolume: 1
   boundsMin: {x: -8, y: -4}
   boundsMax: {x: 8, y: 4}
---- !u!114 &8867654976949792609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6017899327036943353}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 858506f2c83f6e546881ee594f5f80c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

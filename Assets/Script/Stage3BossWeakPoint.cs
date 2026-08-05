@@ -151,6 +151,9 @@ namespace PPYY.Stage3
 
         public void OnHit(Vector2 worldPos)
         {
+            // 出現演出中〜カウントダウン終了まではTime.timeScaleが0のため、その間はヒットを無効にする
+            if (Time.timeScale == 0f) return;
+
             transform.DOKill();
             // DOKill()はアニメーション途中の値で止まるため、連打（LIDARの1タッチで複数回ヒットするケースを含む）で
             // パンチ後の縮小が積み重なって戻らなくなるのを防ぐため、毎回スケールを基準値に戻してから再生する

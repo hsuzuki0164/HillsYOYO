@@ -128,7 +128,8 @@ namespace PPYY
         }
 
         // 演出でボタンがフェードインし終わっていて、かつ(設定されていれば)1P/2P両方の読み取りが
-        // 完了していれば、スタートボタンを押せるようにする
+        // 完了していれば、スタートボタンを押せるようにする。
+        // 1P/2P両方の読み取りが完了している場合は、ボタン操作を待たず自動的にスタートする
         void TryEnableStartButton()
         {
             if (!introReachedStartStep) return;
@@ -137,10 +138,22 @@ namespace PPYY
 
             startButtonGroup.interactable = true;
             startButtonGroup.blocksRaycasts = true;
+
+            if (activeScanner != null && activeScanner.BothReady)
+            {
+                OnStartButtonClicked();
+            }
         }
 
         void Update()
         {
+            // デバッグ用：Shift+Sでバーコード読み取り・演出完了を待たずに強制的にスタートする
+            bool shiftHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+            if (shiftHeld && Input.GetKeyDown(KeyCode.S))
+            {
+                OnStartButtonClicked();
+            }
+
             if (!titleFloating || titleImage == null) return;
 
             floatTime += Time.deltaTime;

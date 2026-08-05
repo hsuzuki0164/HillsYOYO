@@ -75,6 +75,9 @@ namespace PPYY
         [Header("リセット操作（間違えて読み取った場合にShift+このキーでやり直す）")]
         public KeyCode resetKey = KeyCode.C;
 
+        [Header("バーコードの桁数（仕様上の本来の桁数。バーコードリーダーが末尾にチェックデジットを付与してくる場合、超過分は切り捨てる）")]
+        public int barcodeDigitCount = 10;
+
         // 両プレイヤーの読み取りが完了した時に発火。TitleScreenがスタートボタンの有効化に使う
         public event Action OnBothReady;
         // リセットされた時に発火。TitleScreenがスタートボタンの再無効化に使う
@@ -202,6 +205,8 @@ namespace PPYY
                 return;
             }
 
+            value = NormalizeBarcodeValue(value);
+
             if (TryLoadAndCrop(value, out var portrait, out var name, out var ghost, out var moneyBag))
             {
                 PlayerArtwork.SetP1(value, portrait, name, ghost, moneyBag);
@@ -232,6 +237,8 @@ namespace PPYY
                 return;
             }
 
+            value = NormalizeBarcodeValue(value);
+
             if (TryLoadAndCrop(value, out var portrait, out var name, out var ghost, out var moneyBag))
             {
                 PlayerArtwork.SetP2(value, portrait, name, ghost, moneyBag);
@@ -252,6 +259,17 @@ namespace PPYY
                 PlayErrorFeedback(p2Field);
                 RefocusField(p2Field);
             }
+        }
+
+        // バーコードリーダーが末尾にチェックデジットを付与してくる場合に、本来の桁数を超えた分を切り捨てる
+        string NormalizeBarcodeValue(string value)
+        {
+            value = value.Trim();
+            if (barcodeDigitCount > 0 && value.Length > barcodeDigitCount)
+            {
+                value = value.Substring(0, barcodeDigitCount);
+            }
+            return value;
         }
 
         void RefocusField(TMP_InputField field)
