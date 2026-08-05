@@ -18,8 +18,12 @@ namespace PPYY.Stage3
         public AudioClip[] hitSounds;
         [Range(0f, 1f)] public float hitSoundVolume = 1f;
 
+        [Header("連続ヒット防止（1回ヒットしてから、次のヒットを受け付けるまでの秒数）")]
+        public float hitCooldown = 0.5f;
+
         SpriteRenderer sr;
         Vector3 baseScale;
+        float lastHitTime = -999f;
 
         void Awake()
         {
@@ -36,6 +40,10 @@ namespace PPYY.Stage3
 
         public void OnHit(Vector2 worldPos)
         {
+            // クールダウン中のヒットは完全に無視する（エフェクト・ダメージとも発生させない）
+            if (Time.time - lastHitTime < hitCooldown) return;
+            lastHitTime = Time.time;
+
             transform.DOKill();
             // 連打（LIDARの1タッチで複数回ヒットするケースを含む）でパンチ後の縮小が積み重なって
             // 戻らなくなるのを防ぐため、毎回スケールを基準値に戻してから再生する

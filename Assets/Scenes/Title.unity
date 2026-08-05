@@ -1564,7 +1564,7 @@ Transform:
   m_GameObject: {fileID: 772282759}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 403.2, y: -515, z: 0}
+  m_LocalPosition: {x: 406.4, y: -515, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1681,26 +1681,26 @@ MonoBehaviour:
   fileExtension: .jpg
   nameRect:
     serializedVersion: 2
-    x: 0.55
-    y: 0.03
-    width: 0.35
-    height: 0.1
+    x: 0.62
+    y: 0.06
+    width: 0.3
+    height: 0.06
   portraitRect:
     serializedVersion: 2
-    x: 0.55
-    y: 0.175
-    width: 0.35
-    height: 0.23
+    x: 0.6
+    y: 0.174
+    width: 0.3
+    height: 0.22
   ghostRect:
     serializedVersion: 2
     x: 0.55
-    y: 0.42
+    y: 0.48
     width: 0.35
     height: 0.24
   moneyBagRect:
     serializedVersion: 2
     x: 0.55
-    y: 0.68
+    y: 0.74
     width: 0.35
     height: 0.24
   removeGreenBackground: 1
@@ -1807,6 +1807,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1964391196819068, guid: c433b5a0f1062684faa117c3ef5553be, type: 3}
       insertIndex: -1
       addedObject: {fileID: 979937564}
+    - targetCorrespondingSourceObject: {fileID: 1964391196819068, guid: c433b5a0f1062684faa117c3ef5553be, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 979937568}
+    - targetCorrespondingSourceObject: {fileID: 1964391196819068, guid: c433b5a0f1062684faa117c3ef5553be, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 979937567}
   m_SourcePrefab: {fileID: 100100000, guid: c433b5a0f1062684faa117c3ef5553be, type: 3}
 --- !u!1 &979937563 stripped
 GameObject:
@@ -1825,7 +1831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b40b65f7331419b4493a89493293a302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ipAddress: 192.168.0.10
+  ipAddress: 192.168.10.2
   port: 10940
 --- !u!114 &979937565
 MonoBehaviour:
@@ -1844,6 +1850,51 @@ MonoBehaviour:
   offsetDegrees: -135
   stepAngleDegrees: 0.25
   debugMode: 0
+--- !u!114 &979937567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979937563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cd3d7df99eadc5448af3795f6b4a40b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fileName: LidarCalibration.csv
+  reloadKey: 105
+--- !u!114 &979937568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979937563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2797bec2fdf9dc14f9301b2347265d6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  urgSensor: {fileID: 979937565}
+  temporalMedianFrames: 3
+  spatialMedianIndices: 3
+  distanceFilterThreshold: 2.25
+  clusterDistanceThreshold: 0.1
+  minClusterPointCount: 2
+  sensorCorners:
+  - {x: 1.5, y: 1}
+  - {x: 1.5, y: -1}
+  - {x: 0.2, y: -1}
+  - {x: 0.2, y: 1}
+  hitCooldown: 0.5
+  hitSuppressRadius: 0.3
+  showDebugMarkers: 0
+  toggleDebugMarkersKey: 282
+  trackingMarkerColor: {r: 0, g: 1, b: 1, a: 0.6}
+  hitMarkerColor: {r: 1, g: 0, b: 0, a: 0.9}
+  markerWorldSize: 0.3
+  hitMarkerLifetime: 0.4
 --- !u!1 &1065987759
 GameObject:
   m_ObjectHideFlags: 0
@@ -3127,8 +3178,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 650.5, y: 410}
-  m_SizeDelta: {x: 300, y: 100}
+  m_AnchoredPosition: {x: 655.3, y: 422.3}
+  m_SizeDelta: {x: 290, y: 94}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1674277762
 MonoBehaviour:
@@ -3754,8 +3805,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -653.6, y: 410}
-  m_SizeDelta: {x: 300, y: 100}
+  m_AnchoredPosition: {x: -662.3, y: 421.88}
+  m_SizeDelta: {x: 290, y: 94}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1981694948
 MonoBehaviour:

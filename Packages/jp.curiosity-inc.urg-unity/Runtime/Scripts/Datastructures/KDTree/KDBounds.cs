@@ -22,7 +22,6 @@ SOFTWARE.
 */
 
 using UnityEngine;
-using UnityEditor;
 
 namespace DataStructures.ViliWonka.KDTree {
 

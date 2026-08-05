@@ -609,8 +609,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6df22bb4489b8304292f28da88ab5752, type: 2}
+  m_sharedMaterial: {fileID: 7617229069157801435, guid: 6df22bb4489b8304292f28da88ab5752, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2677,6 +2677,7 @@ MonoBehaviour:
   hitSounds:
   - {fileID: 8300000, guid: 60c859bf69940d041b2b2dd8ea89e4f4, type: 3}
   hitSoundVolume: 1
+  hitCooldown: 0.3
 --- !u!58 &1143519147
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3642,7 +3643,7 @@ MonoBehaviour:
   mouthCloseSound: {fileID: 8300000, guid: ff2a8e0322d80834bb4633867236e7cc, type: 3}
   mouthSoundVolume: 1
   coreDamageMin: 50
-  coreDamageMax: 300
+  coreDamageMax: 200
   minionPrefabs:
   - {fileID: 1730180097899286209, guid: 5a5242126a45e1a499f093407b9f7b75, type: 3}
   minionSpawnIntervalRange: {x: 6, y: 12}
@@ -3674,7 +3675,7 @@ MonoBehaviour:
   sideMoveRangeX: 2
   sideMoveDuration: 0.25
   sideMoveEase: 6
-  timeLimit: 30
+  timeLimit: 90
   timerText: {fileID: 23575283}
   nextSceneName: Result
   maxVictoryBonus: 5000
