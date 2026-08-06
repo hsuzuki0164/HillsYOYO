@@ -286,6 +286,11 @@ namespace PPYY
 
             if (startButtonGroup != null)
             {
+                // バーコード読み取りが演出中（7.のフェードイン最中）に完了して自動スタートする場合、
+                // フェードインのDOFadeがまだ動いていることがある。Killしてalphaを1に固定してから
+                // 点滅処理に入らないと、フェードと点滅がalphaを奪い合って半透明で止まってしまう
+                startButtonGroup.DOKill();
+                startButtonGroup.alpha = 1f;
                 startButtonGroup.interactable = false;
                 startButtonGroup.blocksRaycasts = false;
             }

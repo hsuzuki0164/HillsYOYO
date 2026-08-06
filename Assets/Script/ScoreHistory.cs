@@ -66,5 +66,12 @@ namespace PPYY
             PlayerPrefs.SetString(PrefsKey, JsonUtility.ToJson(data));
             PlayerPrefs.Save();
         }
+
+        // 歴代ランキングの記録を全て消去する
+        public static void ClearAll()
+        {
+            PlayerPrefs.DeleteKey(PrefsKey);
+            PlayerPrefs.Save();
+        }
     }
 }

@@ -3656,8 +3656,8 @@ MonoBehaviour:
   leftHand: {fileID: 1343550813}
   rightHand: {fileID: 194417256}
   stealIntervalRange: {x: 8, y: 14}
-  stealAmountMin: 5
-  stealAmountMax: 10
+  stealAmountMin: 3
+  stealAmountMax: 6
   handReachDuration: 0.6
   bodyMoveDuration: 1
   lootSprite: {fileID: 0}
@@ -3666,13 +3666,13 @@ MonoBehaviour:
   stealSoundVolume: 1
   centerX: 0
   bodyMoveRangeX: 2
-  bodyBobAmplitude: 0.5
-  bodyBobFrequency: 1.5
+  bodyBobAmplitude: 1
+  bodyBobFrequency: 2.5
   handBobAmplitude: 0.3
   handBobFrequency: 1.2
   sideMoveIntervalMin: 1
-  sideMoveIntervalMax: 3
-  sideMoveRangeX: 2
+  sideMoveIntervalMax: 2
+  sideMoveRangeX: 4
   sideMoveDuration: 0.25
   sideMoveEase: 6
   timeLimit: 90

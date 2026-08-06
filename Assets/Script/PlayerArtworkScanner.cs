@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -191,6 +192,18 @@ namespace PPYY
             field.interactable = activate;
 
             if (activate)
+            {
+                // 2周目以降、RebindUI経由(Awake内)でここに来た場合、まだ新しいシーンの
+                // TMP_InputField側の初期化(Start等)が終わっていないことがあるため、
+                // 1フレーム待ってから選択・アクティブ化する
+                StartCoroutine(ActivateFieldDelayed(field));
+            }
+        }
+
+        IEnumerator ActivateFieldDelayed(TMP_InputField field)
+        {
+            yield return null;
+            if (field != null)
             {
                 field.Select();
                 field.ActivateInputField();

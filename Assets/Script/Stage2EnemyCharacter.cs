@@ -77,6 +77,7 @@ namespace PPYY.Stage2
         bool hasLoot;
         int lootAmount;
         PlayerSide targetSide;
+        int targetSpotIndex;
         Vector3 targetCenter;
         float wobbleTime;
         float wanderTimer;
@@ -98,7 +99,8 @@ namespace PPYY.Stage2
         void Start()
         {
             targetSide = Stage2TreasureManager.Instance.GetSideFromWorldX(transform.position.x);
-            targetCenter = Stage2TreasureManager.Instance.GetTreasureWorldPosition(targetSide);
+            targetSpotIndex = Stage2TreasureManager.Instance.PickRandomSpotIndex(targetSide);
+            targetCenter = Stage2TreasureManager.Instance.GetTreasureWorldPosition(targetSide, targetSpotIndex);
         }
 
         void Update()
@@ -171,7 +173,7 @@ namespace PPYY.Stage2
             PickNewWanderTarget();
 
             int candidate = PickStealAmount();
-            int stolen = Stage2TreasureManager.Instance.StealPoints(targetSide, candidate);
+            int stolen = Stage2TreasureManager.Instance.StealPoints(targetSide, targetSpotIndex, candidate);
             lootAmount = stolen;
             hasLoot = stolen > 0;
 
@@ -327,7 +329,7 @@ namespace PPYY.Stage2
             // (盗まれた本人が倒せば取り返し、相手側が倒せば横取りになる)
             if (hasLoot)
             {
-                Stage2TreasureManager.Instance.AddPoints(hitterSide, lootAmount);
+                Stage2TreasureManager.Instance.AddPoints(hitterSide, targetSpotIndex, lootAmount);
             }
 
             SpawnHitEffect();
