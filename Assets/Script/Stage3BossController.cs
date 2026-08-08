@@ -54,6 +54,13 @@ namespace PPYY.Stage3
         public Vector2 minionBoundsMin = new Vector2(-8f, -4f);
         public Vector2 minionBoundsMax = new Vector2(8f, 4f);
 
+        [Header("低HP時の強化（体力がこの割合以下になったら発動。1回だけ）")]
+        [Range(0f, 1f)] public float enrageHpRatio = 0.2f;
+        [Tooltip("左右へ素早く動く頻度の倍率（間隔をこの倍率で割る）")]
+        public float enrageMoveFrequencyMultiplier = 1.5f;
+        [Tooltip("雑魚敵召喚の頻度の倍率（間隔をこの倍率で割る）")]
+        public float enrageMinionFrequencyMultiplier = 3f;
+
         [Header("爆弾")]
         public GameObject bombPrefab;
         public Vector2 bombIntervalRange = new Vector2(4f, 8f);
@@ -202,6 +209,7 @@ namespace PPYY.Stage3
         bool leftHandBobPaused, rightHandBobPaused;
         float idleTime;
         bool sideMovePaused;
+        bool enraged;
         void Start()
         {
             currentHp = maxHp;
@@ -230,6 +238,7 @@ namespace PPYY.Stage3
             while (state != BossState.Defeated && state != BossState.Fleeing)
             {
                 float wait = Random.Range(sideMoveIntervalMin, sideMoveIntervalMax);
+                if (enraged) wait /= enrageMoveFrequencyMultiplier;
                 yield return new WaitForSeconds(wait);
 
                 if (state == BossState.Defeated || state == BossState.Fleeing) yield break;
@@ -310,7 +319,11 @@ namespace PPYY.Stage3
             }
         }
 
-        void ResetMinionTimer() => minionTimer = Random.Range(minionSpawnIntervalRange.x, minionSpawnIntervalRange.y);
+        void ResetMinionTimer()
+        {
+            minionTimer = Random.Range(minionSpawnIntervalRange.x, minionSpawnIntervalRange.y);
+            if (enraged) minionTimer /= enrageMinionFrequencyMultiplier;
+        }
         void ResetBombTimer() => bombTimer = Random.Range(bombIntervalRange.x, bombIntervalRange.y);
         void ResetStealTimer() => stealTimer = Random.Range(stealIntervalRange.x, stealIntervalRange.y);
 
@@ -478,6 +491,11 @@ namespace PPYY.Stage3
             currentHp = Mathf.Max(0, currentHp - damage);
             UpdateHpText();
             NotifyEyes(autoRevert: true);
+
+            if (!enraged && currentHp <= maxHp * enrageHpRatio)
+            {
+                enraged = true; // 以降、動く頻度・雑魚召喚頻度が上がる（次の間隔リセットから反映）
+            }
 
             if (currentHp <= 0)
             {

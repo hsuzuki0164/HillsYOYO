@@ -146,11 +146,11 @@ MonoBehaviour:
   closedSprites:
   - {fileID: 960392627, guid: 8aef1f3032cdc6f459e7a7d707b45bb7, type: 3}
   - {fileID: 1332402191, guid: 5d7e4a4fe4bca094c9af7eb040ee87c7, type: 3}
-  - {fileID: -929030840, guid: 8aef1f3032cdc6f459e7a7d707b45bb7, type: 3}
+  - {fileID: 1818179415, guid: ca7275f931a3645479c375d3a90a7d1c, type: 3}
   openedSprites:
   - {fileID: -1308997545, guid: 8aef1f3032cdc6f459e7a7d707b45bb7, type: 3}
   - {fileID: 1664193719, guid: 5d7e4a4fe4bca094c9af7eb040ee87c7, type: 3}
-  - {fileID: -1471357385, guid: 8aef1f3032cdc6f459e7a7d707b45bb7, type: 3}
+  - {fileID: -643303407, guid: ca7275f931a3645479c375d3a90a7d1c, type: 3}
   mimicRevealedSprite: {fileID: 933978817, guid: 5d7e4a4fe4bca094c9af7eb040ee87c7, type: 3}
   mimicDefeatedSprite: {fileID: 933978817, guid: 5d7e4a4fe4bca094c9af7eb040ee87c7, type: 3}
   scoreBySize: 0a0000003200000064000000
@@ -161,6 +161,12 @@ MonoBehaviour:
   mimicTimeWindow: 5
   mimicPenalty: -80
   mimicDefeatBonus: 100
+  mimicColorTint: {r: 0.8, g: 0.45, b: 0.45, a: 1}
+  mimicShakeDistance: 0.05
+  mimicShakeDuration: 0.05
+  mimicShakeActiveDuration: 1
+  mimicShakeRestDuration: 1
+  mimicIdleDisappearRange: {x: 4, y: 8}
   respawnDelayRange: {x: 2, y: 5}
   fadeInDuration: 0.6
   pullUpDistance: 0.5

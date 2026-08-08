@@ -3087,7 +3087,7 @@ MonoBehaviour:
   boss: {fileID: 1482532579}
   bossFadeInDuration: 2
   delayAfterTransform: 0
-  countdownStartDelay: 4
+  countdownStartDelay: 2
   countdown: {fileID: 782773932}
 --- !u!4 &1289117864
 Transform:
@@ -3646,10 +3646,13 @@ MonoBehaviour:
   coreDamageMax: 200
   minionPrefabs:
   - {fileID: 1730180097899286209, guid: 5a5242126a45e1a499f093407b9f7b75, type: 3}
-  minionSpawnIntervalRange: {x: 6, y: 12}
-  minionSpawnCount: 3
+  minionSpawnIntervalRange: {x: 3, y: 6}
+  minionSpawnCount: 6
   minionBoundsMin: {x: -8, y: -4}
   minionBoundsMax: {x: 8, y: 4}
+  enrageHpRatio: 0.2
+  enrageMoveFrequencyMultiplier: 1.5
+  enrageMinionFrequencyMultiplier: 3
   bombPrefab: {fileID: 6867222749975404678, guid: 0ffbfb5c7e6e2b74f89d5cf8bdf74d41, type: 3}
   bombIntervalRange: {x: 4, y: 8}
   bombThrowOrigin: {x: 0, y: 3, z: 0}

@@ -960,7 +960,7 @@ MonoBehaviour:
   - {fileID: 1701785842, guid: 1e8828a2a7efc9e47bbd7cf6746b063c, type: 3}
   p1PointsText: {fileID: 2146569720}
   p2PointsText: {fileID: 1886130501}
-  useDebugStartPoints: 1
+  useDebugStartPoints: 0
   debugStartPoints: 2000
 --- !u!4 &231546365
 Transform:
@@ -1607,7 +1607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doorRect: {fileID: 1894410690}
-  doorClosedY: 0
+  doorClosedY: 150
   doorStartY: 1200
   doorFallDuration: 1
   doorFallEase: 30

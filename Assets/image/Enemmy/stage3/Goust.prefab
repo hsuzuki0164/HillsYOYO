@@ -147,10 +147,11 @@ MonoBehaviour:
   moveSpeed: 2
   boundsMin: {x: -8, y: -4}
   boundsMax: {x: 8, y: 4}
+  baseFacesRight: 0
   fadeOutDuration: 0.3
   hitEffectPrefabs:
   - {fileID: 492719237779392360, guid: 12900b9cc657de24896713ff7cc67b77, type: 3}
-  - {fileID: 5286328772216621839, guid: 41b57333fef1c834d8da0f4387d82975, type: 3}
+  - {fileID: 8349056059640529778, guid: e9ad456ebe254dc4f9bf6c35b54c4f30, type: 3}
   - {fileID: 8292648223902147612, guid: f2b894e1f4d86aa4dae81fbff7e5e336, type: 3}
   hitSounds:
   - {fileID: 8300000, guid: ac5fd96b1e3a0c6448ce008b746fba9a, type: 3}

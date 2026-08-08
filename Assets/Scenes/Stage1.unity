@@ -585,7 +585,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 910419072}
   - {fileID: 1669258837}
   - {fileID: 1567048783}
   - {fileID: 344628910}
@@ -1807,11 +1806,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 486172364ea76c44aa0d32838e0df0bd, type: 3}
---- !u!4 &910419072 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3111281900384542074, guid: 486172364ea76c44aa0d32838e0df0bd, type: 3}
-  m_PrefabInstance: {fileID: 1401160897}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &944999477 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3111281900384542074, guid: 486172364ea76c44aa0d32838e0df0bd, type: 3}
@@ -2685,8 +2679,16 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 464372808}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 649127213467472997, guid: 486172364ea76c44aa0d32838e0df0bd, type: 3}
+      propertyPath: closedSprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 1818179415, guid: ca7275f931a3645479c375d3a90a7d1c, type: 3}
+    - target: {fileID: 649127213467472997, guid: 486172364ea76c44aa0d32838e0df0bd, type: 3}
+      propertyPath: openedSprites.Array.data[2]
+      value: 
+      objectReference: {fileID: -643303407, guid: ca7275f931a3645479c375d3a90a7d1c, type: 3}
     - target: {fileID: 3111281900384542074, guid: 486172364ea76c44aa0d32838e0df0bd, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.3981475
@@ -2701,15 +2703,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3111281900384542074, guid: 486172364ea76c44aa0d32838e0df0bd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 118.280136
+      value: -7.4400024
       objectReference: {fileID: 0}
     - target: {fileID: 3111281900384542074, guid: 486172364ea76c44aa0d32838e0df0bd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -31.534893
+      value: -2.9400005
       objectReference: {fileID: 0}
     - target: {fileID: 3111281900384542074, guid: 486172364ea76c44aa0d32838e0df0bd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 16.178844
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3111281900384542074, guid: 486172364ea76c44aa0d32838e0df0bd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2741,7 +2743,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6726131543933147483, guid: 486172364ea76c44aa0d32838e0df0bd, type: 3}
       propertyPath: m_Name
-      value: GoldBox
+      value: GoldBoxP
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4015,7 +4017,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doorRect: {fileID: 1154127954}
-  doorClosedY: 0
+  doorClosedY: 100
   doorStartY: 1200
   doorFallDuration: 1
   doorFallEase: 30
@@ -4214,6 +4216,7 @@ SceneRoots:
   - {fileID: 330669930}
   - {fileID: 661364299}
   - {fileID: 1421486624}
+  - {fileID: 1401160897}
   - {fileID: 464372808}
   - {fileID: 414254963}
   - {fileID: 1883938334}
